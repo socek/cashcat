@@ -1,0 +1,38 @@
+version: '3.3'
+
+services:
+  nginx:
+    image: nginx:1.13.8
+    env_file: .env
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx
+
+  backend:
+    image: backend
+    build: backend
+    env_file: .env
+    volumes:
+      - ./backend/code:/code
+
+  frontend:
+    build: frontend
+    env_file: .env
+    volumes:
+      - ./frontend/code:/code
+    command: npm run dev
+
+  postgres:
+    image: postgres:10.1
+    env_file: .env
+    labels:
+      - "traefik.enable=false"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:3.2.11
+
+volumes:
+  postgres-data:
