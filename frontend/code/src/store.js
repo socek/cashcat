@@ -2,11 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import auth from '@/auth/store'
-import screen from '@/screen/store'
-import breadcrumb from '@/breadcrumb/store'
-import contest from '@/contests/store'
-import question from '@/questions/store'
-import game from '@/games/store.js'
 
 Vue.use(Vuex)
 
@@ -28,11 +23,6 @@ export default new Vuex.Store({
     }
   },
   modules: {
-    auth,
-    screen,
-    breadcrumb,
-    contest,
-    question,
-    game
+    auth
   }
 })
