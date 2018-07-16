@@ -6,7 +6,7 @@ from pyramid.httpexceptions import HTTPNotAcceptable
 from sapp.decorators import WithContext
 from sapp.plugins.pyramid.views import RestfulView as BaseRestfulView
 
-from PROJECT import app
+from cashcat import app
 
 
 class RestfulView(BaseRestfulView):

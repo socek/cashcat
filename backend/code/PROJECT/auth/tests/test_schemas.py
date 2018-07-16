@@ -1,7 +1,7 @@
 from marshmallow.exceptions import ValidationError
 from pytest import fixture
 
-from PROJECT.auth.schemas import SignUpSchema
+from cashcat.auth.schemas import SignUpSchema
 
 
 class TestSignUpSchema(object):

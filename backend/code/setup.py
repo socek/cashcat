@@ -7,7 +7,7 @@ from setuptools import find_packages
 from setuptools import setup
 
 setup(
-    name='PROJECT',
+    name='cashcat',
     version='0.1',
     description='',
     packages=find_packages(),
@@ -18,9 +18,9 @@ setup(
     author_email='msocek@gmail.com',
     license='MIT',
     zip_safe=False,
-    url='http://github.com/socek/PROJECT',
+    url='http://github.com/socek/cashcat',
     entry_points={
-        'paste.app_factory': ['main = PROJECT.application.startpoints:uwsgi'],
+        'paste.app_factory': ['main = cashcat.application.startpoints:uwsgi'],
     },
     classifiers=[
         'Development Status :: 4 - Beta', 'Environment :: Web Environment',

@@ -1,7 +1,7 @@
 #!/bin/bash
 # This script adds requiretment and send it to the requirements.txt
-rm backend/code/PROJECT.egg-info
+rm backend/code/cashcat.egg-info
 docker-compose build
 docker-compose run --rm -u 0 backend ./scripts/add_req $1
 docker-compose build
-git checkout -- backend/code/PROJECT.egg-info
+git checkout -- backend/code/cashcat.egg-info

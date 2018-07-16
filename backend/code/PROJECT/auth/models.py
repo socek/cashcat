@@ -6,7 +6,7 @@ from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import String
 
-from PROJECT.application.model import Model
+from cashcat.application.model import Model
 
 
 class User(Model):

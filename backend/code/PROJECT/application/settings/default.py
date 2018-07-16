@@ -47,10 +47,10 @@ def logging(settings):
                 'handlers': ['console'],
                 'qualname': 'alembic',
             },
-            'PROJECT': {
+            'cashcat': {
                 'level': 'DEBUG',
                 'handlers': ['console'],
-                'qualname': 'PROJECT',
+                'qualname': 'cashcat',
             },
             'celery': {
                 'handlers': ['console'],

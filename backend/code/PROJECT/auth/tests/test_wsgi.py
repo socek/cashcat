@@ -3,8 +3,8 @@ from uuid import uuid4
 
 from pytest import fixture
 
-from PROJECT.application.testing import WebTestFixture
-from PROJECT.auth.jwt import encode_jwt_from_user
+from cashcat.application.testing import WebTestFixture
+from cashcat.auth.jwt import encode_jwt_from_user
 
 
 class TestWebAuthView(WebTestFixture):
@@ -54,7 +54,7 @@ class TestWebSignUpFormView(WebTestFixture):
 
     @fixture
     def mcommand(self):
-        with patch('PROJECT.auth.views.UserCommand') as mock:
+        with patch('cashcat.auth.views.UserCommand') as mock:
             yield mock.return_value
 
     def test_signup_happy_path(self, fake_app, mcommand):

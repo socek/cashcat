@@ -3,13 +3,13 @@ from unittest.mock import patch
 
 from pytest import fixture
 
-from PROJECT.application.plugins.routing import CROJECTRouting
+from cashcat.application.plugins.routing import CashcatRouting
 
 
-class TestCROJECTRouting(object):
+class TestCashcatRouting(object):
     @fixture
     def madd(self):
-        with patch.object(CROJECTRouting, 'add') as mock:
+        with patch.object(CashcatRouting, 'add') as mock:
             yield mock
 
     @fixture
@@ -20,6 +20,6 @@ class TestCROJECTRouting(object):
         """
         This is syntax check of the routing.
         """
-        CROJECTRouting(mpyramid).make()
+        CashcatRouting(mpyramid).make()
 
         madd.assert_called()

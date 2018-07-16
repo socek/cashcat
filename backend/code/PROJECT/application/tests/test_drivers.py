@@ -4,8 +4,8 @@ from pytest import fixture
 from pytest import raises
 from sqlalchemy.orm.exc import NoResultFound
 
-from PROJECT.application.testing import IntegrationFixture
-from PROJECT.auth.drivers import UserQuery
+from cashcat.application.testing import IntegrationFixture
+from cashcat.auth.drivers import UserQuery
 
 
 class TestQuery(IntegrationFixture):

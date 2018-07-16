@@ -1,9 +1,9 @@
 from pytest import fixture
 
-from PROJECT.application.testing import IntegrationFixture
-from PROJECT.auth.drivers import UserQuery
-from PROJECT.auth.drivers import UserCommand
-from PROJECT.auth.models import User
+from cashcat.application.testing import IntegrationFixture
+from cashcat.auth.drivers import UserQuery
+from cashcat.auth.drivers import UserCommand
+from cashcat.auth.models import User
 
 
 class TestUserQuery(IntegrationFixture):

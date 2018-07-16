@@ -1,3 +1,3 @@
-from PROJECT.application.app import CROJECTConfigurator
+from cashcat.application.app import CashcatConfigurator
 
-app = CROJECTConfigurator()
+app = CashcatConfigurator()

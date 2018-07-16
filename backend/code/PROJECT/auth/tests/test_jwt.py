@@ -4,8 +4,8 @@ from uuid import uuid4
 from pytest import fixture
 from undecorated import undecorated
 
-from PROJECT.auth.jwt import decode_jwt
-from PROJECT.auth.jwt import encode_jwt_from_user
+from cashcat.auth.jwt import decode_jwt
+from cashcat.auth.jwt import encode_jwt_from_user
 
 
 class TestJwt(object):

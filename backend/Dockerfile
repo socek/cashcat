@@ -5,7 +5,7 @@ RUN useradd -U user
 ENV PYTHONUNBUFFERED 1
 ENV APP_DIR /code
 WORKDIR $APP_DIR
-RUN mkdir -p /app.egg-info && ln -s ../app.egg-info PROJECT.egg-info
+RUN mkdir -p /app.egg-info && ln -s ../app.egg-info cashcat.egg-info
 
 COPY code/requirements.txt $APP_DIR
 RUN pip install -r requirements.txt --no-cache-dir

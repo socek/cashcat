@@ -6,8 +6,8 @@ from pytest import raises
 from sapp.plugins.pyramid.testing import ViewFixtureMixin
 from sqlalchemy.exc import IntegrityError
 
-from PROJECT.auth.views import LoginView
-from PROJECT.auth.views import SignUpView
+from cashcat.auth.views import LoginView
+from cashcat.auth.views import SignUpView
 
 
 class TestLoginView(ViewFixtureMixin):

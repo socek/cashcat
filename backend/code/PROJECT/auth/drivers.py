@@ -1,7 +1,7 @@
-from PROJECT.application.drivers import Query
-from PROJECT.application.drivers import Command
+from cashcat.application.drivers import Query
+from cashcat.application.drivers import Command
 
-from PROJECT.auth.models import User
+from cashcat.auth.models import User
 
 
 class UserQuery(Query):

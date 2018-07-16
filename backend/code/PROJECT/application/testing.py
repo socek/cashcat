@@ -9,10 +9,10 @@ from sapp.plugins.sqlalchemy.recreate import RecreateDatabases
 from sapp.plugins.sqlalchemy.testing import BaseIntegrationFixture
 from sqlalchemy.exc import InvalidRequestError
 
-from PROJECT.application.app import CROJECTConfigurator
-from PROJECT.auth.models import User
-from PROJECT.contest.models import Contest
-from PROJECT.game.models import Game
+from cashcat.application.app import CashcatConfigurator
+from cashcat.auth.models import User
+from cashcat.contest.models import Contest
+from cashcat.game.models import Game
 
 
 class DeleteOnExit(object):
@@ -32,8 +32,8 @@ class DeleteOnExit(object):
             self.dbsession.rollback()
 
 
-class CROJECTFixturesMixin(object):
-    CONFIGURATOR_CLASS = CROJECTConfigurator
+class CashcatFixturesMixin(object):
+    CONFIGURATOR_CLASS = CashcatConfigurator
 
     def after_configurator_start(self, config):
         paths = config.settings['paths']
@@ -134,11 +134,11 @@ class CROJECTFixturesMixin(object):
             yield game
 
 
-class IntegrationFixture(CROJECTFixturesMixin, BaseIntegrationFixture):
+class IntegrationFixture(CashcatFixturesMixin, BaseIntegrationFixture):
     pass
 
 
-class WebTestFixture(CROJECTFixturesMixin, BaseWebTestFixture):
+class WebTestFixture(CashcatFixturesMixin, BaseWebTestFixture):
     login_url = '/auth/login'
     authenticated_user_data = {
         'name': 'user3',

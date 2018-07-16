@@ -2,11 +2,11 @@ from pyramid.httpexceptions import HTTPUnauthorized
 from sapp.decorators import WithContext
 from sqlalchemy.orm.exc import NoResultFound
 
-from PROJECT import app
-from PROJECT.application.cache import cache_per_request
-from PROJECT.application.views import RestfulView
-from PROJECT.auth.drivers import UserQuery
-from PROJECT.auth.jwt import decode_jwt
+from cashcat import app
+from cashcat.application.cache import cache_per_request
+from cashcat.application.views import RestfulView
+from cashcat.auth.drivers import UserQuery
+from cashcat.auth.jwt import decode_jwt
 
 
 class AuthMixin(object):

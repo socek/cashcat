@@ -1,7 +1,7 @@
 {
-  "name": "PROJECT",
+  "name": "cashcat",
   "version": "1.0.0",
-  "description": "CROJECT Frontend",
+  "description": "Cashcat Frontend",
   "author": "",
   "private": true,
   "scripts": {

@@ -1,6 +1,6 @@
 from pytest import fixture
 
-from PROJECT.auth.models import User
+from cashcat.auth.models import User
 
 
 class TestUser(object):

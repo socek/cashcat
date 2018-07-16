@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock
 
-from PROJECT.application.cache import cache_per_request
+from cashcat.application.cache import cache_per_request
 
 
 class SampleView(object):

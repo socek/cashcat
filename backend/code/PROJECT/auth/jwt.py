@@ -3,7 +3,7 @@ from jwt import encode
 
 from sapp.decorators import WithContext
 
-from PROJECT import app
+from cashcat import app
 
 
 @WithContext(app, args=['settings'])

@@ -8,9 +8,9 @@ from pytest import raises
 from sqlalchemy.orm.exc import NoResultFound
 from undecorated import undecorated
 
-from PROJECT.application.testing import ViewFixture
-from PROJECT.auth.view_mixins import AuthMixin
-from PROJECT.auth.view_mixins import AuthenticatedView
+from cashcat.application.testing import ViewFixture
+from cashcat.auth.view_mixins import AuthMixin
+from cashcat.auth.view_mixins import AuthenticatedView
 
 
 class TestAuthMixin(object):
@@ -24,7 +24,7 @@ class TestAuthMixin(object):
 
     @fixture
     def muser_query(self):
-        with patch('PROJECT.auth.view_mixins.UserQuery') as mock:
+        with patch('cashcat.auth.view_mixins.UserQuery') as mock:
             yield mock
 
     @fixture
@@ -37,7 +37,7 @@ class TestAuthMixin(object):
 
     @fixture
     def mdecode_jwt(self):
-        with patch('PROJECT.auth.view_mixins.decode_jwt') as mock:
+        with patch('cashcat.auth.view_mixins.decode_jwt') as mock:
             yield mock
 
     @fixture

@@ -1,6 +1,6 @@
-from PROJECT.application.settings.default import default
-from PROJECT.application.settings.pyramid import pyramid_specific
-from PROJECT.application.settings.tests import tests_specific
+from cashcat.application.settings.default import default
+from cashcat.application.settings.pyramid import pyramid_specific
+from cashcat.application.settings.tests import tests_specific
 
 
 def pyramid():

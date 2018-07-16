@@ -9,7 +9,7 @@ from pytest import fixture
 from pytest import raises
 from sapp.plugins.pyramid.testing import ViewFixtureMixin
 
-from PROJECT.application.views import RestfulView
+from cashcat.application.views import RestfulView
 
 
 class TestRestfulView(ViewFixtureMixin):

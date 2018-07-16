@@ -1,4 +1,4 @@
-from PROJECT import app
+from cashcat import app
 
 
 def setup(env):

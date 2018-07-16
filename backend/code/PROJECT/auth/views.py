@@ -2,13 +2,13 @@ from pyramid.httpexceptions import HTTPBadRequest
 from sapp.decorators import WithContext
 from sqlalchemy.exc import IntegrityError
 
-from PROJECT import app
-from PROJECT.application.views import RestfulView
-from PROJECT.auth.drivers import UserCommand
-from PROJECT.auth.drivers import UserQuery
-from PROJECT.auth.jwt import encode_jwt_from_user
-from PROJECT.auth.schemas import LoginSchema
-from PROJECT.auth.schemas import SignUpSchema
+from cashcat import app
+from cashcat.application.views import RestfulView
+from cashcat.auth.drivers import UserCommand
+from cashcat.auth.drivers import UserQuery
+from cashcat.auth.jwt import encode_jwt_from_user
+from cashcat.auth.schemas import LoginSchema
+from cashcat.auth.schemas import SignUpSchema
 
 
 class LoginView(RestfulView):
