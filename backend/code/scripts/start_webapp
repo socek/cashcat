@@ -2,8 +2,11 @@
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+alembic="pipenv run alembic"
+uwsgi="pipenv run uwsgi"
+
 echo "Running migrations"
-alembic upgrade head
+$alembic upgrade head
 if [ "$?" != "0" ] ; then
   exit 1
 fi
@@ -16,4 +19,4 @@ else
     COMMAND=""
 fi
 
-uwsgi --ini-paste /code/app.ini $COMMAND
+$uwsgi --ini-paste /code/app.ini $COMMAND
