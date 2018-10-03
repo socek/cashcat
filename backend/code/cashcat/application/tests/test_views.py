@@ -34,7 +34,7 @@ class TestRestfulView(ViewFixtureMixin):
         .get_validated_fields should raise HTTPBadRequest with errors as return
         data
         """
-        mschema.load.side_effect = ValidationError('msg')
+        mschema.load.side_effect = ValidationError("msg")
         with raises(HTTPBadRequest):
             view.get_validated_fields(mschema)
 
@@ -43,7 +43,6 @@ class TestRestfulView(ViewFixtureMixin):
         .get_validated_fields should raise HTTPNotAcceptable, when provided json
         is malformed
         """
-        mschema.load.side_effect = JSONDecodeError(
-            None, '', 0)
+        mschema.load.side_effect = JSONDecodeError(None, "", 0)
         with raises(HTTPNotAcceptable):
             view.get_validated_fields(mschema)

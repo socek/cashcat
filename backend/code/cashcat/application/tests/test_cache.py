@@ -9,7 +9,7 @@ class SampleView(object):
         self.request._cache = {}
         self.counter = 0
 
-    @cache_per_request('something')
+    @cache_per_request("something")
     def get_something(self):
         self.counter += 1
         return self.counter

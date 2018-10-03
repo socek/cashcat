@@ -9,6 +9,7 @@ WORKDIR $APP_DIR
 RUN mkdir -p /app.egg-info && ln -s ../app.egg-info cashcat.egg-info && chown user:user /app.egg-info
 
 USER user
+COPY --chown=user:user bashrc /home/user/.bashrc
 COPY --chown=user:user code/Pipfile $APP_DIR
 COPY --chown=user:user code/Pipfile.lock $APP_DIR
 RUN pipenv install

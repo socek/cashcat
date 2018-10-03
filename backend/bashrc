@@ -1,0 +1,2 @@
+alias run="pipenv run"
+alias pytest="pipenv run pytest"

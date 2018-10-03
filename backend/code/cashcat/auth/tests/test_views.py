@@ -23,7 +23,7 @@ class TestSignUpView(ViewFixtureMixin):
 
     @fixture
     def mcreate_user(self, view):
-        with patch.object(view, 'create_user') as mock:
+        with patch.object(view, "create_user") as mock:
             yield mock
 
     def test_post_on_integrity_error(self, view, mcreate_user, mrequest):
@@ -33,11 +33,10 @@ class TestSignUpView(ViewFixtureMixin):
         """
         mcreate_user.side_effect = IntegrityError(None, None, None)
         mrequest.json_body = {
-            'email': 'new@email.com',
-            'password': 'fake1',
-            'confirmPassword': 'fake1',
+            "email": "new@email.com",
+            "password": "fake1",
+            "confirmPassword": "fake1",
         }
 
         with raises(HTTPBadRequest):
             view.post()
-

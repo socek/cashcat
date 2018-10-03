@@ -24,20 +24,18 @@ class TestAuthMixin(object):
 
     @fixture
     def muser_query(self):
-        with patch('cashcat.auth.view_mixins.UserQuery') as mock:
+        with patch("cashcat.auth.view_mixins.UserQuery") as mock:
             yield mock
 
     @fixture
     def mdecoded_jwt(self, mixin):
-        with patch.object(mixin, 'decoded_jwt') as mock:
-            mock.return_value = {
-                'id': sentinel.user_id,
-            }
+        with patch.object(mixin, "decoded_jwt") as mock:
+            mock.return_value = {"id": sentinel.user_id}
             yield mock
 
     @fixture
     def mdecode_jwt(self):
-        with patch('cashcat.auth.view_mixins.decode_jwt') as mock:
+        with patch("cashcat.auth.view_mixins.decode_jwt") as mock:
             yield mock
 
     @fixture
@@ -51,15 +49,7 @@ class TestAuthMixin(object):
     def get_user(self, mixin):
         return undecorated(mixin.get_user)
 
-    def test_get_user(
-            self,
-            mixin,
-            mdb,
-            muser_query,
-            get_user,
-            mrequest,
-            mdecoded_jwt,
-    ):
+    def test_get_user(self, mixin, mdb, muser_query, get_user, mrequest, mdecoded_jwt):
         """
         .get_user should return authenticated user when proper jwt provided.
         """
@@ -68,32 +58,22 @@ class TestAuthMixin(object):
         assert get_user(mixin, dbsession=mdb) == mquery.get_by_id.return_value
         mquery.get_by_id.assert_called_once_with(sentinel.user_id)
 
-    def test_decoded_jwt_no_jwt_provided(
-            self,
-            mixin,
-            mrequest,
-            mdecode_jwt,
-    ):
+    def test_decoded_jwt_no_jwt_provided(self, mixin, mrequest, mdecode_jwt):
         """
         .get_user should return authenticated user when proper jwt provided.
         """
         with raises(HTTPUnauthorized):
             mixin.decoded_jwt()
 
-    def test_decoded_jwt_proper_jwt_provided(
-            self,
-            mixin,
-            mrequest,
-            mdecode_jwt,
-    ):
+    def test_decoded_jwt_proper_jwt_provided(self, mixin, mrequest, mdecode_jwt):
         """
         .get_user should return authenticated user when proper jwt provided.
         """
-        mrequest.headers['JWT'] = 'fake-jwt'
+        mrequest.headers["JWT"] = "fake-jwt"
 
         assert mixin.decoded_jwt() == mdecode_jwt.return_value
 
-        mdecode_jwt.assert_called_once_with('fake-jwt')
+        mdecode_jwt.assert_called_once_with("fake-jwt")
 
     def test_is_authenticated(self, mixin, mrequest):
         """
@@ -101,14 +81,14 @@ class TestAuthMixin(object):
         """
         assert not mixin.is_authenticated()
 
-        mrequest.headers['JWT'] = True
+        mrequest.headers["JWT"] = True
         assert mixin.is_authenticated()
 
     def test_get_user_id(self, mixin, mdecoded_jwt):
         """
         .get_user_id should return id from jwt
         """
-        mdecoded_jwt.return_value = {'id': sentinel.user_id}
+        mdecoded_jwt.return_value = {"id": sentinel.user_id}
 
         assert mixin.get_user_id() == sentinel.user_id
 

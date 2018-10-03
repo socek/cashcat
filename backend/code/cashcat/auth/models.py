@@ -10,7 +10,7 @@ from cashcat.application.model import Model
 
 
 class User(Model):
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
     name = Column(String, nullable=True)
     email = Column(String, nullable=False, unique=True, index=True)
@@ -18,13 +18,11 @@ class User(Model):
     password = Column(Binary(100), nullable=True)
 
     def set_password(self, password):
-        self.password = hashpw(password.encode('utf8'), gensalt())
+        self.password = hashpw(password.encode("utf8"), gensalt())
 
     def validate_password(self, password):
         if self.password:
-            password = password.encode('utf8')
+            password = password.encode("utf8")
             return checkpw(password, self.password)
         else:
             return False
-
-

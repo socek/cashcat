@@ -22,7 +22,7 @@ class JsonPlugin(Plugin):
     def start_pyramid(self, pyramid):
         json_renderer = JSON()
         json_renderer.add_adapter(UUID, self._to_string_adapter)
-        pyramid.add_renderer('json', json_renderer)
+        pyramid.add_renderer("json", json_renderer)
 
     def _to_string_adapter(self, obj, request):
         if obj is not None:

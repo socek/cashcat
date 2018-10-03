@@ -2,9 +2,9 @@ from cashcat import app
 
 
 def uwsgi(settings):
-    app.start('pyramid')
+    app.start("pyramid")
     return app.make_wsgi_object()
 
 
 def tests(settings):
-    app.start('tests')
+    app.start("tests")

@@ -15,10 +15,7 @@ class TestJwt(object):
 
     @fixture
     def settings(self):
-        return {
-            'jwt:secret': 'mysupersecret',
-            'jwt:algorithm': 'HS256',
-        }
+        return {"jwt:secret": "mysupersecret", "jwt:algorithm": "HS256"}
 
     @fixture
     def encode(self):
@@ -36,4 +33,4 @@ class TestJwt(object):
         muser.id = uuid4()
         jwt = encode(muser, settings)
         payload = decode(jwt, settings)
-        assert payload == {'id': muser.id.hex}
+        assert payload == {"id": muser.id.hex}

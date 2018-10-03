@@ -6,4 +6,4 @@ def tests_specific(settings):
 
 
 def database(settings):
-    settings['db:dbsession:url'] = environ['BACKEND_DB_TEST_URL']
+    settings["db:dbsession:url"] = environ["BACKEND_DB_TEST_URL"]

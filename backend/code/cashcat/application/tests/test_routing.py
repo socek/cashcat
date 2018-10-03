@@ -9,7 +9,7 @@ from cashcat.application.plugins.routing import CashcatRouting
 class TestCashcatRouting(object):
     @fixture
     def madd(self):
-        with patch.object(CashcatRouting, 'add') as mock:
+        with patch.object(CashcatRouting, "add") as mock:
             yield mock
 
     @fixture

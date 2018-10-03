@@ -17,6 +17,6 @@ class SignUpSchema(Schema):
 
     @post_load
     def validate_passwords(self, data):
-        if data['confirmPassword'] != data['password']:
-            raise ValidationError('Password do not match!')
+        if data["confirmPassword"] != data["password"]:
+            raise ValidationError("Password do not match!")
         return data

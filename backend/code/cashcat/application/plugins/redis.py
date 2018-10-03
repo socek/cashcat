@@ -9,8 +9,8 @@ class RedisPlugin(Plugin):
 
     def enter(self, context):
         params = dict(
-            host=self.settings['redis:host'],
-            port=self.settings['redis:port'],
-            db=self.settings['redis:db'],
+            host=self.settings["redis:host"],
+            port=self.settings["redis:port"],
+            db=self.settings["redis:db"],
         )
-        setattr(context, 'redis', StrictRedis(**params))
+        setattr(context, "redis", StrictRedis(**params))

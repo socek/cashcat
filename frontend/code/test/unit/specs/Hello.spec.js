@@ -1,11 +1,14 @@
-import Vue from 'vue'
-import Hello from '@/components/Hello'
+import Login from '@/auth/login'
+import { shallowMount } from '@vue/test-utils'
 
-describe('Hello.vue', () => {
+console.log('0')
+describe('Login', () => {
+  console.log('a0')
   it('should render correct contents', () => {
-    const Constructor = Vue.extend(Hello)
-    const vm = new Constructor().$mount()
-    expect(vm.$el.querySelector('.hello h1').textContent)
-      .to.equal('Welcome to Your Vue.js App')
+    console.log('a')
+    const wrapper = shallowMount(Login, {})
+    console.log('b')
+    expect(wrapper.isAuthenticated()).toEqual(false)
+    console.log('c')
   })
 })

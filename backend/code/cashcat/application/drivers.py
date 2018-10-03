@@ -9,10 +9,7 @@ class Query(BaseQuery):
     """
 
     def _list_active(self):
-        return (
-            self._query()
-            .filter(self.model.is_active.is_(True))
-        )
+        return self._query().filter(self.model.is_active.is_(True))
 
     def _get_by_id(self, id):
         return self._list_active().filter(self.model.id == id)
@@ -40,5 +37,5 @@ class Command(BaseCommand):
         self.database.commit()
 
     def soft_delete(self, id):
-        self.query._get_by_id(id).update({'is_active': False})
+        self.query._get_by_id(id).update({"is_active": False})
         self.database.commit()

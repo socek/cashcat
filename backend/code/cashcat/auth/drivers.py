@@ -20,7 +20,7 @@ class UserCommand(Command):
     def create(self, **kwargs):
         password = None
         obj = self.model()
-        password = kwargs.pop('password', None)
+        password = kwargs.pop("password", None)
 
         for key, value in kwargs.items():
             setattr(obj, key, value)

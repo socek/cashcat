@@ -9,4 +9,4 @@ from cashcat.application.model import Model
 
 import cashcat.auth.models
 
-AlembicScript(app, Model, 'dbsession').run()
+AlembicScript(app, Model, "dbsession").run()

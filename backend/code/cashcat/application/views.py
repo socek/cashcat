@@ -11,7 +11,7 @@ from cashcat import app
 
 class RestfulView(BaseRestfulView):
     @property
-    @WithContext(app, args=['dbsession'])
+    @WithContext(app, args=["dbsession"])
     def dbsession(self, dbsession):
         return dbsession  # pragma: no cover
 
