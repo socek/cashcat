@@ -11,8 +11,6 @@ from sqlalchemy.exc import InvalidRequestError
 
 from cashcat.application.app import CashcatConfigurator
 from cashcat.auth.models import User
-from cashcat.contest.models import Contest
-from cashcat.game.models import Game
 
 
 class DeleteOnExit(object):
@@ -86,44 +84,6 @@ class CashcatFixturesMixin(object):
 
         with DeleteOnExit(dbsession, user):
             yield user
-
-    @fixture
-    def contest_from_user(self, dbsession, user):
-        contest_data = dict(self.contest_user_data)
-        contest_data["owner"] = user
-        contest = Contest(**contest_data)
-
-        with DeleteOnExit(dbsession, contest):
-            yield contest
-
-    @fixture
-    def contest_from_second_user(self, dbsession, second_user):
-        contest_data = dict(self.contest_second_user_data)
-        contest_data["owner"] = second_user
-        contest = Contest(**contest_data)
-
-        with DeleteOnExit(dbsession, contest):
-            yield contest
-
-    @fixture
-    def game_from_user(self, dbsession, user, contest_from_user):
-        game_data = dict(self.game_user_data)
-        game_data["owner"] = user
-        game_data["contest"] = contest_from_user
-        game = Game(**game_data)
-
-        with DeleteOnExit(dbsession, game):
-            yield game
-
-    @fixture
-    def game_from_second_user(self, dbsession, second_user, contest_from_user):
-        game_data = dict(self.game_second_user_data)
-        game_data["owner"] = second_user
-        game_data["contest"] = contest_from_user
-        game = Game(**game_data)
-
-        with DeleteOnExit(dbsession, game):
-            yield game
 
 
 class IntegrationFixture(CashcatFixturesMixin, BaseIntegrationFixture):

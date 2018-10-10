@@ -8,7 +8,7 @@ from cashcat.application.testing import IntegrationFixture
 from cashcat.auth.drivers import UserQuery
 
 
-class TestQuery(IntegrationFixture):
+class TestBaseDrivers(IntegrationFixture):
     @fixture
     def driver(self, app):
         """

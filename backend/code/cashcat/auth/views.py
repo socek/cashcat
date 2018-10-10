@@ -28,7 +28,6 @@ class LoginView(RestfulView):
             )
 
     def get_authenticated_user(self, fields):
-        print(fields)
         user = self.query.find_by_email(fields["email"])
         if user and user.validate_password(fields["password"]):
             return user

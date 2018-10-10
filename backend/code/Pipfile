@@ -4,9 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-sqlalchemy = "*"
+sqlalchemy = "==1.2.12"
 pyramid = "*"
-alembic = "*"
+alembic = "==1.0.0"
 ipdb = "*"
 ipython = "*"
 "psycopg2" = "*"
@@ -18,8 +18,9 @@ celery = "*"
 redis = "*"
 bcrypt = "*"
 uwsgi = "*"
-marshmallow = "*"
+marshmallow = "==3.0.0b16"
 pyjwt = "*"
+undecorated = "*"
 
 [dev-packages]
 
