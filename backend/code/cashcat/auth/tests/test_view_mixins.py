@@ -30,7 +30,7 @@ class TestAuthMixin(object):
     @fixture
     def mdecoded_jwt(self, mixin):
         with patch.object(mixin, "decoded_jwt") as mock:
-            mock.return_value = {"id": sentinel.user_id}
+            mock.return_value = {"uid": sentinel.user_id}
             yield mock
 
     @fixture
@@ -88,7 +88,7 @@ class TestAuthMixin(object):
         """
         .get_user_id should return id from jwt
         """
-        mdecoded_jwt.return_value = {"id": sentinel.user_id}
+        mdecoded_jwt.return_value = {"uid": sentinel.user_id}
 
         assert mixin.get_user_id() == sentinel.user_id
 

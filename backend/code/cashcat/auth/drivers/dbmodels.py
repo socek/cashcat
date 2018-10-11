@@ -25,14 +25,14 @@ class UserData(DbModel):
             is_admin=self.is_admin,
             password=self.password)
 
-    def from_model(self, obj):
-        self.uid = obj.uid
-        self.created_at = obj.created_at
-        self.updated_at = obj.updated_at
-        self.name = obj.name
-        self.email = obj.email
-        self.is_admin = obj.is_admin
-        self.password = obj.password
+    def from_model(self, model):
+        self.uid = model.uid
+        self.created_at = model.created_at
+        self.updated_at = model.updated_at
+        self.name = model.name
+        self.email = model.email
+        self.is_admin = model.is_admin
+        self.password = model.password
 
     def update_model(self, model):
         model.uid = self.uid

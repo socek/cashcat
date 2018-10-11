@@ -8,7 +8,7 @@ from cashcat import app
 
 @WithContext(app, args=["settings"])
 def encode_jwt_from_user(user, settings):
-    payload = {"id": user.id}
+    payload = {"uid": user.uid}
     return encode(
         payload, settings["jwt:secret"], algorithm=settings["jwt:algorithm"]
     ).decode("utf8")

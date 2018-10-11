@@ -11,8 +11,6 @@ class TestWebAuthView(WebTestFixture):
     url = "/auth"
     login_url = "/auth/login"
 
-    # TODO: remove database from this tests
-
     def test_login_with_bad_email(self, fake_app):
         """
         /auth/login should return error when bad email was provided.
@@ -63,9 +61,9 @@ class TestWebSignUpFormView(WebTestFixture):
             "password": "fake1",
             "confirmPassword": "fake1",
         }
-        mcommand.return_value.id = 10
+        mcommand.return_value.uid = 10
         muser = mcommand.create.return_value
-        muser.id = uuid4()
+        muser.uid = uuid4()
 
         result = fake_app.post_json(self.url, params=new_user)
 

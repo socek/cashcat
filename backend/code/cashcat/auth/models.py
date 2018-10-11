@@ -27,8 +27,7 @@ class User(Model):
         Validate if provided password match with the password from the model.
         """
         if self.password:
-            password = password.encode("utf8")
-            return checkpw(password, self.password)
+            return checkpw(password.encode("utf8"), self.password)
         else:
             return False
 

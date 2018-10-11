@@ -1,3 +1,4 @@
+from uuid import uuid4
 from unittest.mock import MagicMock
 from unittest.mock import PropertyMock
 from unittest.mock import patch
@@ -10,6 +11,8 @@ from sapp.plugins.sqlalchemy.testing import BaseIntegrationFixture
 from sqlalchemy.exc import InvalidRequestError
 
 from cashcat.application.app import CashcatConfigurator
+from cashcat.auth.drivers import UserCommand
+from cashcat.auth.drivers import UserQuery
 from cashcat.auth.models import User
 
 
@@ -65,25 +68,24 @@ class CashcatFixturesMixin(object):
     def dbsession(self, app):
         return app.dbsession
 
-    # @fixture
-    # def user(self, dbsession):
-    #     user_data = dict(self.user_data)
-    #     password = user_data.pop("password")
-    #     user = User(**self.user_data)
-    #     user.set_password(password)
+    @fixture
+    def user_query(self, app):
+        return UserQuery(app.dbsession)
 
-    #     with DeleteOnExit(dbsession, user):
-    #         yield user
+    @fixture
+    def user_command(self, app):
+        return UserCommand(app.dbsession)
 
-    # @fixture
-    # def second_user(self, dbsession):
-    #     user_data = dict(self.second_user_data)
-    #     password = user_data.pop("password")
-    #     user = User(**self.second_user_data)
-    #     user.set_password(password)
-
-    #     with DeleteOnExit(dbsession, user):
-    #         yield user
+    @fixture
+    def user(self, user_command):
+        uid = uuid4()
+        user_data = dict(self.user_data)
+        password_txt = user_data.pop('password')
+        user = User(uid, **user_data)
+        user.set_password(password_txt)
+        user_command.create(user)
+        yield user
+        user_command.force_delete(uid)
 
 
 class IntegrationFixture(CashcatFixturesMixin, BaseIntegrationFixture):

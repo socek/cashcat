@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from pytest import fixture
 
 from cashcat.auth.models import User
@@ -6,7 +8,7 @@ from cashcat.auth.models import User
 class TestUser(object):
     @fixture
     def user(self):
-        return User()
+        return User(uuid4())
 
     def test_set_password(self, user):
         """
@@ -16,17 +18,17 @@ class TestUser(object):
 
         assert user.password != "password"
 
-    def test_validating_password(self, user):
+    def test_do_password_match(self, user):
         """
-        .validate_password should validate only proper password
+        .do_password_match should validate only proper password
         """
         user.set_password("elo")
 
-        assert user.validate_password("elo")
-        assert not user.validate_password("no")
+        assert user.do_password_match("elo")
+        assert not user.do_password_match("no")
 
     def test_validate_empty_password(self, user):
         """
-        .validate_password should not validate empty password
+        .do_password_match should not validate empty password
         """
-        assert not user.validate_password(None)
+        assert not user.do_password_match(None)
