@@ -65,25 +65,25 @@ class CashcatFixturesMixin(object):
     def dbsession(self, app):
         return app.dbsession
 
-    @fixture
-    def user(self, dbsession):
-        user_data = dict(self.user_data)
-        password = user_data.pop("password")
-        user = User(**self.user_data)
-        user.set_password(password)
+    # @fixture
+    # def user(self, dbsession):
+    #     user_data = dict(self.user_data)
+    #     password = user_data.pop("password")
+    #     user = User(**self.user_data)
+    #     user.set_password(password)
 
-        with DeleteOnExit(dbsession, user):
-            yield user
+    #     with DeleteOnExit(dbsession, user):
+    #         yield user
 
-    @fixture
-    def second_user(self, dbsession):
-        user_data = dict(self.second_user_data)
-        password = user_data.pop("password")
-        user = User(**self.second_user_data)
-        user.set_password(password)
+    # @fixture
+    # def second_user(self, dbsession):
+    #     user_data = dict(self.second_user_data)
+    #     password = user_data.pop("password")
+    #     user = User(**self.second_user_data)
+    #     user.set_password(password)
 
-        with DeleteOnExit(dbsession, user):
-            yield user
+    #     with DeleteOnExit(dbsession, user):
+    #         yield user
 
 
 class IntegrationFixture(CashcatFixturesMixin, BaseIntegrationFixture):

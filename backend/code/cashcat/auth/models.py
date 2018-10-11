@@ -1,28 +1,36 @@
 from bcrypt import checkpw
 from bcrypt import gensalt
 from bcrypt import hashpw
-from sqlalchemy import Binary
-from sqlalchemy import Boolean
-from sqlalchemy import Column
-from sqlalchemy import String
 
 from cashcat.application.model import Model
 
 
 class User(Model):
-    __tablename__ = "users"
+    def __init__(
+        self,
+        uid,
+        created_at=None,
+        updated_at=None,
+        name=None,
+        email=None,
+        is_admin=None,
+        password=None,
+    ):
+        super().__init__(uid, created_at, updated_at)
+        self.name = name
+        self.email = email
+        self.is_admin = is_admin
+        self.password = password
 
-    name = Column(String, nullable=True)
-    email = Column(String, nullable=False, unique=True, index=True)
-    is_admin = Column(Boolean, nullable=False, default=False)
-    password = Column(Binary(100), nullable=True)
-
-    def set_password(self, password):
-        self.password = hashpw(password.encode("utf8"), gensalt())
-
-    def validate_password(self, password):
+    def do_password_match(self, password):
+        """
+        Validate if provided password match with the password from the model.
+        """
         if self.password:
             password = password.encode("utf8")
             return checkpw(password, self.password)
         else:
             return False
+
+    def set_password(self, password):
+        self.password = hashpw(password.encode("utf8"), gensalt())
