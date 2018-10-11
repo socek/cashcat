@@ -30,4 +30,4 @@ class Base(object):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
-DbModel = declarative_base(metadata=metadata, cls=Base)
+SqlDataModel = declarative_base(metadata=metadata, cls=Base)

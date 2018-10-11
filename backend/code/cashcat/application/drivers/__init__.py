@@ -1,5 +1,5 @@
 from .command import Command
-from .dbmodel import DbModel
+from .dbmodel import SqlDataModel
 from .query import Query
 
-__all__ = [Command, Query, DbModel]
+__all__ = [Command, Query, SqlDataModel]

@@ -3,11 +3,11 @@ from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import String
 
-from cashcat.application.drivers.dbmodel import DbModel
+from cashcat.application.drivers.dbmodel import SqlDataModel
 from cashcat.auth.models import User
 
 
-class UserData(DbModel):
+class UserData(SqlDataModel):
     __tablename__ = "users"
 
     name = Column(String, nullable=True)
