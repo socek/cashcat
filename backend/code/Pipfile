@@ -21,6 +21,7 @@ uwsgi = "*"
 marshmallow = "==3.0.0b16"
 pyjwt = "*"
 undecorated = "*"
+pyramid-ipython = "*"
 
 [dev-packages]
 

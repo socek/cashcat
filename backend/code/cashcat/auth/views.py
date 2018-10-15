@@ -19,7 +19,6 @@ class LoginView(RestfulView):
 
     def post(self):
         fields = self.get_validated_fields(LoginSchema())
-        print('a', fields)
         user = self.get_authenticated_user(fields)
         if user:
             return {"jwt": encode_jwt_from_user(user)}
@@ -30,7 +29,6 @@ class LoginView(RestfulView):
 
     def get_authenticated_user(self, fields):
         user = self.query.find_by_email(fields["email"])
-        print(type(user), user.uid, user.name, type(user.password), type(fields['password']))
         if user and user.do_password_match(fields["password"]):
             return user
 

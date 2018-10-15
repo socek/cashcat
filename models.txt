@@ -1,0 +1,45 @@
+------ Data input
+Wallet
+- name
+- type (normal / vat)
+- owner_uid
+
+Bill
+- where
+- when (day)
+- wallet_uid
+
+Charge
+- bill (many-to-one)
+- name
+- quantity
+- value
+- type (income / outcome)
+- group_uid
+
+Label
+- name
+- wallet_uid
+
+LabelToCharge
+- label_uid
+- charge_uid
+
+Group
+- name
+- wallet_uid
+
+------ Planing
+Group Plan
+Object which will have current settings for planning.
+- group (many-to-one)
+- value
+- type (income / outcome)
+
+Group Month Plan
+Object which will have settings for past plannings.
+- group (many-to-one)
+- value
+- type (income / outcome)
+
+------ Reports

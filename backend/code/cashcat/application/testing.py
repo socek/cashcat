@@ -1,7 +1,7 @@
-from uuid import uuid4
 from unittest.mock import MagicMock
 from unittest.mock import PropertyMock
 from unittest.mock import patch
+from uuid import uuid4
 
 from pytest import fixture
 from sapp.plugins.pyramid.testing import BaseWebTestFixture
@@ -14,6 +14,8 @@ from cashcat.application.app import CashcatConfigurator
 from cashcat.auth.drivers import UserCommand
 from cashcat.auth.drivers import UserQuery
 from cashcat.auth.models import User
+from cashcat.wallet.drivers import WalletCommand
+from cashcat.wallet.drivers import WalletQuery
 
 
 class DeleteOnExit(object):
@@ -77,10 +79,29 @@ class CashcatFixturesMixin(object):
         return UserCommand(app.dbsession)
 
     @fixture
+    def wallet_query(self, app):
+        return WalletQuery(app.dbsession)
+
+    @fixture
+    def wallet_command(self, app):
+        return WalletCommand(app.dbsession)
+
+    @fixture
     def user(self, user_command):
         uid = uuid4()
         user_data = dict(self.user_data)
-        password_txt = user_data.pop('password')
+        password_txt = user_data.pop("password")
+        user = User(uid, **user_data)
+        user.set_password(password_txt)
+        user_command.create(user)
+        yield user
+        user_command.force_delete(uid)
+
+    @fixture
+    def second_user(self, user_command):
+        uid = uuid4()
+        user_data = dict(self.second_user_data)
+        password_txt = user_data.pop("password")
         user = User(uid, **user_data)
         user.set_password(password_txt)
         user_command.create(user)
