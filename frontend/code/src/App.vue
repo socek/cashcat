@@ -1,7 +1,14 @@
 <template>
   <div>
+    <b-navbar v-if="!isAuthenticated" toggleable="md" type="light" variant="light">
+      <b-navbar-brand href="#">Cashcat - Portfelowy Kot</b-navbar-brand>
+      <b-navbar-nav class="ml-auto">
+        <register v-if="!isAuthenticated"></register>
+      </b-navbar-nav>
+    </b-navbar>
+
     <b-navbar v-if="isAuthenticated" toggleable="md" type="dark" variant="dark">
-      <b-navbar-brand href="#">Cashcat Admin Panel</b-navbar-brand>
+      <b-navbar-brand href="#">Cashcat - Portfelowy Kot</b-navbar-brand>
       <b-collapse is-nav id="nav_collapse">
 
         <b-navbar-nav>
@@ -15,20 +22,20 @@
     </b-navbar>
 
     <div class="container-fluid" id="content_container">
-      <register v-if="!isAuthenticated"></register>
-      <div class="row">
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+      <router-view v-if="!isAuthenticated"></router-view>
+      <div class="row" v-if="isAuthenticated">
+        <nav class="col-md-1 d-none d-md-block bg-light sidebar">
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" href="#">
+                <a class="nav-link active" href="#/wallets">
                   <icon name="wallet" /> Portfele
                 </a>
               </li>
             </ul>
           </div>
         </nav>
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <main role="main" class="col-md-10 ml-sm-auto col-lg-11 pt-3 px-4">
           <router-view></router-view>
         </main>
       </div>

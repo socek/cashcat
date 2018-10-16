@@ -1,6 +1,6 @@
 <template>
   <div class="row justify-content-md-end signup">
-    <b-btn @click="showModal" v-if="!isAuthenticated" variant="danger" size="small">
+    <b-btn id="sign-up-button" @click="showModal" v-if="!isAuthenticated" variant="danger" size="small">
       Sign Up
     </b-btn>
 
