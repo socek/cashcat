@@ -15,9 +15,9 @@ class RestfulView(BaseRestfulView):
     def dbsession(self, dbsession):
         return dbsession  # pragma: no cover
 
-    def get_validated_fields(self, schema):
+    def get_validated_fields(self, schema, **kwargs):
         try:
-            return schema.load(self.request.json_body)
+            return schema.load(self.request.json_body, **kwargs)
         except JSONDecodeError:
             raise HTTPNotAcceptable()
         except ValidationError as error:

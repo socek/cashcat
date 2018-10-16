@@ -10,9 +10,9 @@ class TestWalletDriver(IntegrationFixture):
         .list_for_owner should return only list of wallet for that user
         """
         wallets = [
-            Wallet(uuid4(), name="my wallet1", type="normal", owner_uid=user.uid),
-            Wallet(uuid4(), name="my wallet2", type="normal", owner_uid=user.uid),
-            Wallet(uuid4(), name="my wallet3", type="normal", owner_uid=second_user.uid),
+            Wallet(uuid4(), name="my wallet1", type="private", owner_uid=user.uid),
+            Wallet(uuid4(), name="my wallet2", type="private", owner_uid=user.uid),
+            Wallet(uuid4(), name="my wallet3", type="private", owner_uid=second_user.uid),
         ]
         for wallet in wallets:
             wallet_command.create(wallet)
