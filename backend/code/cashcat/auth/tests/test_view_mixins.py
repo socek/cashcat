@@ -55,8 +55,8 @@ class TestAuthMixin(object):
         """
         mquery = muser_query.return_value
 
-        assert get_user(mixin, dbsession=mdb) == mquery.get_by_id.return_value
-        mquery.get_by_id.assert_called_once_with(sentinel.user_id)
+        assert get_user(mixin, dbsession=mdb) == mquery.get_by_uid.return_value
+        mquery.get_by_uid.assert_called_once_with(sentinel.user_id)
 
     def test_decoded_jwt_no_jwt_provided(self, mixin, mrequest, mdecode_jwt):
         """

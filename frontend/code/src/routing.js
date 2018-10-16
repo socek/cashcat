@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import store from '@/store'
 
 import NotLoggedIn from '@/auth/not-logged-in'
+import WalletList from '@/wallets/list'
 
 Vue.use(Router)
 
@@ -35,6 +36,12 @@ let router = new Router({
       name: 'NotLoggedIn',
       component: NotLoggedIn,
       beforeEnter: onlyNotLoggedIn
+    },
+    {
+      path: '/wallets',
+      name: 'WalletList',
+      component: WalletList,
+      beforeEnter: requireAuth
     }
   ]
 })

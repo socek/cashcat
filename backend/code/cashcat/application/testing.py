@@ -140,17 +140,6 @@ class WebTestFixture(CashcatFixturesMixin, BaseWebTestFixture):
         return result.json_body["jwt"]
 
 
-class DictLike(object):
-    def __init__(self, data=None, **kwargs):
-        data = dict(data)
-        data.update(kwargs)
-        for name, value in data.items():
-            setattr(self, name, value)
-
-    def __getitem__(self, name):
-        return getattr(self, name)
-
-
 class ViewFixture(ViewFixtureMixin):
     _view = None
 

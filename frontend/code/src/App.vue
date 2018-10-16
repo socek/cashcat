@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-navbar toggleable="md" type="dark">
+    <b-navbar v-if="isAuthenticated" toggleable="md" type="dark" variant="dark">
       <b-navbar-brand href="#">Cashcat Admin Panel</b-navbar-brand>
       <b-collapse is-nav id="nav_collapse">
 
@@ -10,12 +10,12 @@
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           <login></login>
-          <register v-if="!isAuthenticated"></register>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
 
     <div class="container" id="content_container">
+      <register v-if="!isAuthenticated"></register>
       <router-view></router-view>
     </div>
 

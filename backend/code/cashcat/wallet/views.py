@@ -23,7 +23,7 @@ class WalletView(AuthenticatedView):
         Get list of wallets.
         """
         owner = self.get_user()
-        wallets = self.query().list_for_user(owner)
+        wallets = self.query().list_for_owner(owner)
         schema = WalletSchema(many=True)
         return schema.dump(wallets)
 

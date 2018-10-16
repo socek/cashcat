@@ -1,3 +1,7 @@
 tr.title th {
   text-align: center;
 }
+
+.signup button {
+  margin-top: 10px;
+}

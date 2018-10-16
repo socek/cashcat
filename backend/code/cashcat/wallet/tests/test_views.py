@@ -44,7 +44,7 @@ class TestWalletView(ViewFixture):
         wallet = MagicMock()
         wallet.uid = uuid4()
         wallet.owner_uid = uuid4()
-        mquery.list_for_user.return_value = [wallet]
+        mquery.list_for_owner.return_value = [wallet]
         assert view.get() == [
             {
                 "name": str(wallet.name),
