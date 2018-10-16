@@ -4,7 +4,7 @@ import Router from 'vue-router'
 import store from '@/store'
 
 import NotLoggedIn from '@/auth/not-logged-in'
-import WalletList from '@/wallets/list'
+import WalletList from '@/wallets/list/list'
 
 Vue.use(Router)
 
