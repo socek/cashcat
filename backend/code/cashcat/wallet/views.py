@@ -3,13 +3,16 @@ from sapp.decorators import WithContext
 from cashcat import app
 from cashcat.auth.view_mixins import AuthenticatedView
 from cashcat.wallet.drivers import WalletQuery
+from cashcat.wallet.schemas import WalletSchema
 
 
 class WalletView(AuthenticatedView):
-    @property
     @WithContext(app, args=["dbsession"])
     def query(self, dbsession):
         return WalletQuery(dbsession)
 
     def get(self):
-        return self.query.list_for_user()
+        owner = self.get_user()
+        wallets = self.query().list_for_user(owner)
+        schema = WalletSchema(many=True)
+        return schema.dump(wallets)

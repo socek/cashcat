@@ -13,7 +13,6 @@ class AuthMixin(object):
     @cache_per_request("user")
     @WithContext(app, args=["dbsession"])
     def get_user(self, dbsession):
-        # TODO: think about caching this per request or context?
         user_rd = UserQuery(dbsession)
 
         payload = self.decoded_jwt()
