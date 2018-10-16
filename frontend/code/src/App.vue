@@ -14,9 +14,24 @@
       </b-collapse>
     </b-navbar>
 
-    <div class="container" id="content_container">
+    <div class="container-fluid" id="content_container">
       <register v-if="!isAuthenticated"></register>
-      <router-view></router-view>
+      <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link active" href="#">
+                  <icon name="wallet" /> Portfele
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+          <router-view></router-view>
+        </main>
+      </div>
     </div>
 
   </div>
