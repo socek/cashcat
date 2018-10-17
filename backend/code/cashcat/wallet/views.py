@@ -42,9 +42,9 @@ class WalletsView(BaseView):
 class WalletView(BaseView):
     def validate(self):
         super().validate()
-        owner = self.get_user()
+        user = self.get_user()
         wallet = self._get_wallet()
-        if owner.uid != wallet.owner_uid:
+        if not wallet.is_accessible_by(user):
             raise HTTPNotFound()
 
     def get(self):
@@ -59,8 +59,9 @@ class WalletView(BaseView):
         """
         schema = WalletSchema(partial=("uid", "type", "owner_uid"))
         wallet = self.get_validated_fields(schema)
-        update = {"name": wallet.name}
-        self.command().update_by_uid(self.request.matchdict["wallet_uid"], update)
+        self.command().update_by_uid(
+            self.request.matchdict["wallet_uid"], {"name": wallet.name}
+        )
 
     @cache_per_request("wallet")
     def _get_wallet(self):

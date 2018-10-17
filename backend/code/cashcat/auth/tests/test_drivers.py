@@ -32,6 +32,13 @@ class TestUserDriver(IntegrationFixture):
         assert model.is_admin == user.is_admin
         assert model.password == user.password
 
+    def test_get_by_uid_with_bad_uid(self, user_query):
+        """
+        .get_by_uid should raise NoResultFound when uuid is malformed
+        """
+        with raises(NoResultFound):
+            user_query.get_by_uid('x')
+
     def test_delete(self, user_command, user_query, user):
         user_command.delete(user.uid)
 

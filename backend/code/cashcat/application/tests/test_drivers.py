@@ -14,5 +14,5 @@ class TestDriver(object):
         query = MagicMock()
         result = driver(query)
         result = undecorated(result)
-        assert result(sentinel.dbsession) == query.return_value
+        assert result(dbsession=sentinel.dbsession) == query.return_value
         query.assert_called_once_with(sentinel.dbsession)

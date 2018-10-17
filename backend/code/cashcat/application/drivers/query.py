@@ -18,8 +18,8 @@ class Query(BaseQuery):
 
     def get_by_uid(self, uid):
         try:
-            UUID(uid)
-        except ValueError:
+            isinstance(uid, UUID) or UUID(uid)
+        except (ValueError, AttributeError):
             raise NoResultFound
 
         try:

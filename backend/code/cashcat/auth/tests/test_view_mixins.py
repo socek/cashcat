@@ -29,7 +29,7 @@ class TestAuthMixin(object):
 
     @fixture
     def mdecoded_jwt(self, mixin):
-        with patch.object(mixin, "decoded_jwt") as mock:
+        with patch.object(mixin, "_decoded_jwt") as mock:
             mock.return_value = {"uid": sentinel.user_id}
             yield mock
 
@@ -63,7 +63,7 @@ class TestAuthMixin(object):
         .get_user should return authenticated user when proper jwt provided.
         """
         with raises(HTTPUnauthorized):
-            mixin.decoded_jwt()
+            mixin._decoded_jwt()
 
     def test_decoded_jwt_proper_jwt_provided(self, mixin, mrequest, mdecode_jwt):
         """
@@ -71,7 +71,7 @@ class TestAuthMixin(object):
         """
         mrequest.headers["JWT"] = "fake-jwt"
 
-        assert mixin.decoded_jwt() == mdecode_jwt.return_value
+        assert mixin._decoded_jwt() == mdecode_jwt.return_value
 
         mdecode_jwt.assert_called_once_with("fake-jwt")
 

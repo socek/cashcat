@@ -13,18 +13,21 @@ class AuthMixin(object):
     @cache_per_request("user")
     @WithContext(app, args=["dbsession"])
     def get_user(self, dbsession):
+        """
+        Get current logged in user depending on the JWT token.
+        """
         user_rd = UserQuery(dbsession)
 
-        payload = self.decoded_jwt()
+        payload = self._decoded_jwt()
         return user_rd.get_by_uid(payload["uid"])
 
     def is_authenticated(self):
         return self.request.headers.get("JWT") is not None
 
     def get_user_id(self):
-        return self.decoded_jwt()["uid"]
+        return self._decoded_jwt()["uid"]
 
-    def decoded_jwt(self):
+    def _decoded_jwt(self):
         jwt = self.request.headers.get("JWT")
         if jwt:
             return decode_jwt(jwt)
