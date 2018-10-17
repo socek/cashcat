@@ -6,7 +6,6 @@ from pyramid.httpexceptions import HTTPBadRequest
 from pytest import fixture
 from pytest import mark
 from pytest import raises
-from undecorated import undecorated
 
 from cashcat.application.testing import ViewFixture
 from cashcat.wallet.views import WalletView
@@ -83,21 +82,3 @@ class TestWalletView(ViewFixture):
         assert result["name"] == "myname"
         assert result["type"] == "private"
         assert result["owner_uid"] == str(mget_user.return_value.uid)
-
-    def test_query(self, view, mwallet_query, mwallet_command):
-        """
-        .query should return wallet query driver.
-        """
-        query = undecorated(view.query)
-        db = MagicMock()
-        assert query(None, dbsession=db) == mwallet_query.return_value
-        mwallet_query.assert_called_once_with(db)
-
-    def test_command(self, view, mwallet_command):
-        """
-        .command should return wallet command driver.
-        """
-        command = undecorated(view.command)
-        db = MagicMock()
-        assert command(None, dbsession=db) == mwallet_command.return_value
-        mwallet_command.assert_called_once_with(db)

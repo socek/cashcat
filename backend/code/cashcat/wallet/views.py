@@ -1,8 +1,6 @@
 from uuid import uuid4
 
-from sapp.decorators import WithContext
-
-from cashcat import app
+from cashcat.application.drivers import driver
 from cashcat.auth.view_mixins import AuthenticatedView
 from cashcat.wallet.drivers import WalletCommand
 from cashcat.wallet.drivers import WalletQuery
@@ -10,13 +8,8 @@ from cashcat.wallet.schemas import WalletSchema
 
 
 class WalletView(AuthenticatedView):
-    @WithContext(app, args=["dbsession"])
-    def query(self, dbsession):
-        return WalletQuery(dbsession)
-
-    @WithContext(app, args=["dbsession"])
-    def command(self, dbsession):
-        return WalletCommand(dbsession)
+    query = driver(WalletQuery)
+    command = driver(WalletCommand)
 
     def get(self):
         """

@@ -1,20 +1,18 @@
-from pytest import fixture
+from unittest.mock import MagicMock
+from unittest.mock import sentinel
 
-from cashcat.application.testing import IntegrationFixture
-from cashcat.auth.drivers import UserCommand
-from cashcat.auth.drivers import UserQuery
+from undecorated import undecorated
+
+from cashcat.application.drivers import driver
 
 
-class TestBaseDrivers(IntegrationFixture):
-    """
-    In order to test base drivers, we need to use any drivers that inherits
-    from normal Query and Command class. User should be good enought.
-    """
-    @fixture
-    def query(self, app):
-        return UserQuery(app.dbsession)
-
-    @fixture
-    def command(self, app):
-        return UserCommand(app.dbsession)
-
+class TestDriver(object):
+    def test_driver(self):
+        """
+        driver function should create method which allow to init any driver.
+        """
+        query = MagicMock()
+        result = driver(query)
+        result = undecorated(result)
+        assert result(sentinel.dbsession) == query.return_value
+        query.assert_called_once_with(sentinel.dbsession)
