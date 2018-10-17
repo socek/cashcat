@@ -6,7 +6,10 @@
         <new-dialog></new-dialog>
       </div>
     </div>
-    <b-table id="wallet-list-table" :busy.sync="isBusy" show-empty striped bordered hover :items="myProvider" :fields="fields">
+    <b-table id="wallet-list-table" :busy.sync="isBusy" show-empty striped bordered hover :items="provider" :fields="fields">
+      <template slot="actions" slot-scope="data">
+        <editDialog :wallet_uid="data.item.uid"></editDialog>
+      </template>
       <template slot="empty">
         Brak elementów do wyświetlenia.
       </template>
@@ -17,25 +20,27 @@
 <script>
 import walletResource from '@/wallets/resource'
 import newDialog from '@/wallets/list/new_dialog'
+import editDialog from '@/wallets/list/edit_dialog'
 
 export default {
   data () {
     return {
       isBusy: false,
-      fields: [ {key: 'name', label: 'Nazwa'} ],
+      fields: [ {key: 'name', label: 'Nazwa'}, {key: 'actions', label: 'Akcje'} ],
       items: [],
       resource: walletResource(this)
     }
   },
   methods: {
-    myProvider (ctx) {
+    provider (ctx) {
       return this.resource.list({}, this.fields).then((response) => {
         return response.data
       })
     }
   },
   components: {
-    newDialog
+    newDialog,
+    editDialog
   }
 }
 </script>

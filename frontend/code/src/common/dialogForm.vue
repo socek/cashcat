@@ -1,9 +1,9 @@
 <template>
-  <b-btn size="sm" :variant="variant" @click="showModal">
+  <b-btn size="sm" :variant="variant" @click="showModal" v-b-tooltip.hover :title="title">
     <slot name="anhor"></slot>
 
     <b-modal ref="baseModal" :title="title" hide-footer>
-      <form @submit.prevent="$emit('onSave', $event.target.form)" v-show="!isLoading">
+      <form @submit.prevent="$emit('onSave', $event.target.form)" v-show="!isBusy">
         <b-form-invalid-feedback  v-for="error in form.errors._schema"
                                   :key="error"
                                   :force-show="true" >
@@ -13,9 +13,9 @@
         <slot name="content"></slot>
 
         <input type="submit" value="Save" class="btn btn-primary save">
-        <b-btn class="cancel" variant="danger" @click="hideModal">Cancel</b-btn>
+        <b-btn class="cancel" variant="danger" @click="hideModal">Anuluj</b-btn>
       </form>
-      <div v-show="isLoading" class="modal-spiner">
+      <div v-show="isBusy" class="modal-spiner">
         <icon name="sync" scale="2" spin></icon>
       </div>
     </b-modal>
@@ -37,19 +37,19 @@
     },
     data () {
       return {
-        isLoading: true,
+        isBusy: true,
         withLoading: false
       }
     },
     methods: {
       showModal (modal) {
         this.moveModalToTopOfTheDOM()
-        this.isLoading = this.withLoading
+        this.isBusy = this.withLoading
         this.$refs.baseModal.show()
         if (this.fetchContent) {
           this.fetchContent().then((response) => {
             this.form.defaults = response.body
-            this.isLoading = false
+            this.isBusy = false
             this.$emit('onRefresh', true)
           })
         } else {

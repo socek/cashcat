@@ -1,7 +1,7 @@
 <template>
   <div class="row justify-content-md-end">
-    <b-btn @click="showModal" variant="outline-primary" size="sm">
-      Nowy Portfel
+    <b-btn @click="showModal" variant="outline-success" size="sm" v-b-tooltip.hover title="Stwórz nowy portfel">
+      <icon name="plus-circle" />
     </b-btn>
 
     <b-modal id="newWalletDialog" ref="newWalletDialog" title="Nowy Portfel" hide-footer>
