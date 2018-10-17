@@ -10,5 +10,5 @@ class WalletQuery(Query):
         return self._list_active().filter(self.model.owner_uid == owner_uid)
 
     def list_for_owner(self, owner):
-        for obj in self._list_for_owner_uid(owner.uid):
+        for obj in self._list_for_owner_uid(owner.uid).order_by(self.model.created_at):
             yield obj.to_model()

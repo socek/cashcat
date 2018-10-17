@@ -1,3 +1,6 @@
+from uuid import UUID
+
+from sqlalchemy.exc import DataError
 from sqlalchemy.orm.exc import NoResultFound as SANoResultFound
 
 from sapp.plugins.sqlalchemy.driver import Query as BaseQuery
@@ -15,8 +18,13 @@ class Query(BaseQuery):
 
     def get_by_uid(self, uid):
         try:
+            UUID(uid)
+        except ValueError:
+            raise NoResultFound
+
+        try:
             return self._get_by_uid(uid).one().to_model()
-        except SANoResultFound:
+        except (SANoResultFound, DataError):
             raise NoResultFound
 
     def list_all(self):
@@ -24,11 +32,14 @@ class Query(BaseQuery):
             yield obj.to_model()
 
     def _list_active(self):
-        return self._query().filter(self.model.is_active.is_(True))
+        return (
+            self._query()
+            .filter(self.model.is_active.is_(True))
+        )
 
     def _get_by_uid(self, uid):
         return self._list_active().filter(self.model.uid == uid)
 
     def list_active(self):
-        for obj in self._list_active():
+        for obj in self._list_active().order_by(self.model.created_at):
             yield obj.to_model()

@@ -1,5 +1,12 @@
 <template>
-  <dialogform title="Edytuj portfel" variant="outline-primary" :form="form" :fetchContent="fetchContent">
+  <dialogform
+    title="Edytuj portfel"
+    variant="outline-primary"
+    :form="form"
+    :fetchContent="fetchContent"
+    @onSave="onSave"
+    @onRefresh="refreshForm"
+    ref="dialog">
 
       <template slot="anhor">
         <icon name="edit"></icon>

@@ -1,16 +1,22 @@
 from uuid import uuid4
 
+from pyramid.httpexceptions import HTTPNotFound
+
+from cashcat.application.cache import cache_per_request
 from cashcat.application.drivers import driver
+from cashcat.application.drivers.query import NoResultFound
 from cashcat.auth.view_mixins import AuthenticatedView
 from cashcat.wallet.drivers import WalletCommand
 from cashcat.wallet.drivers import WalletQuery
 from cashcat.wallet.schemas import WalletSchema
 
 
-class WalletView(AuthenticatedView):
+class BaseView(AuthenticatedView):
     query = driver(WalletQuery)
     command = driver(WalletCommand)
 
+
+class WalletsView(BaseView):
     def get(self):
         """
         Get list of wallets.
@@ -31,3 +37,34 @@ class WalletView(AuthenticatedView):
         wallet.owner_uid = self.get_user().uid
         self.command().create(wallet)
         return schema.dump(wallet)
+
+
+class WalletView(BaseView):
+    def validate(self):
+        super().validate()
+        owner = self.get_user()
+        wallet = self._get_wallet()
+        if owner.uid != wallet.owner_uid:
+            raise HTTPNotFound()
+
+    def get(self):
+        """
+        Get wallet data.
+        """
+        return WalletSchema().dump(self._get_wallet())
+
+    def patch(self):
+        """
+        Update wallet data.
+        """
+        schema = WalletSchema(partial=("uid", "type", "owner_uid"))
+        wallet = self.get_validated_fields(schema)
+        update = {"name": wallet.name}
+        self.command().update_by_uid(self.request.matchdict["wallet_uid"], update)
+
+    @cache_per_request("wallet")
+    def _get_wallet(self):
+        try:
+            return self.query().get_by_uid(self.request.matchdict["wallet_uid"])
+        except NoResultFound:
+            raise HTTPNotFound()

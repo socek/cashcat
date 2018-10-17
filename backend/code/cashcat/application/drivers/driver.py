@@ -5,7 +5,7 @@ from cashcat import app
 
 def driver(drv):
     @WithContext(app, args=["dbsession"])
-    def make(dbsession):
+    def make(self=None, dbsession=None):
         return drv(dbsession)
 
     return make

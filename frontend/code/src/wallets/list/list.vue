@@ -6,9 +6,9 @@
         <new-dialog></new-dialog>
       </div>
     </div>
-    <b-table id="wallet-list-table" :busy.sync="isBusy" show-empty striped bordered hover :items="provider" :fields="fields">
+    <b-table ref="table" id="wallet-list-table" :busy.sync="isBusy" show-empty striped bordered hover :items="provider" :fields="fields">
       <template slot="actions" slot-scope="data">
-        <editDialog :wallet_uid="data.item.uid"></editDialog>
+        <editDialog :wallet_uid="data.item.uid" @onSuccess="onSuccess"></editDialog>
       </template>
       <template slot="empty">
         Brak elementów do wyświetlenia.
@@ -36,6 +36,9 @@ export default {
       return this.resource.list({}, this.fields).then((response) => {
         return response.data
       })
+    },
+    onSuccess () {
+      this.$refs.table.refresh()
     }
   },
   components: {
