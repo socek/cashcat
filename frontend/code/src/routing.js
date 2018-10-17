@@ -32,13 +32,13 @@ function onlyNotLoggedIn (to, from, next) {
 let router = new Router({
   routes: [
     {
-      path: '/',
+      path: '/login',
       name: 'NotLoggedIn',
       component: NotLoggedIn,
       beforeEnter: onlyNotLoggedIn
     },
     {
-      path: '/wallets',
+      path: '/',
       name: 'WalletList',
       component: WalletList,
       beforeEnter: requireAuth

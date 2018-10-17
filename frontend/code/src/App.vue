@@ -28,7 +28,7 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" href="#/wallets">
+                <a class="nav-link active" href="#/">
                   <icon name="wallet" /> Portfele
                 </a>
               </li>
