@@ -100,18 +100,6 @@ class TestWalletView(Fixtures):
         with patch.object(view, "_get_wallet") as mock:
             yield mock
 
-    def test_validate_when_wallet_is_not_accessible_by_user(
-        self, view, mget_user, mget_wallet
-    ):
-        """
-        .validate should raise HTTPNotFound when wallet is not accessible by the
-        current logged in user
-        """
-        mget_wallet.return_value.is_accessible_by.return_value = False
-
-        with raises(HTTPNotFound):
-            view.validate()
-
     def test_validate(self, view, mget_user, mget_wallet):
         """
         .validate should do nothing when everything is ok
@@ -144,25 +132,29 @@ class TestWalletView(Fixtures):
 
         mcommand.update_by_uid.assert_called_once_with(uid, {"name": "new name"})
 
-    def test_get_wallet(self, view, mquery, mrequest):
+    def test_get_wallet(self, view, mquery, mrequest, mget_user):
         """
         ._get_wallet should return wallet object found by uid from url
         """
         uid = str(uuid4())
         mrequest.matchdict = {"wallet_uid": uid}
 
-        assert view._get_wallet() == mquery.get_by_uid.return_value
-        mquery.get_by_uid.assert_called_once_with(uid)
+        assert view._get_wallet() == mquery.get_active_by_uid.return_value
+        mquery.get_active_by_uid.assert_called_once_with(
+            uid, mget_user.return_value.uid
+        )
 
-    def test_get_wallet_when_not_found(self, view, mquery, mrequest):
+    def test_get_wallet_when_not_found(self, view, mquery, mrequest, mget_user):
         """
         ._get_wallet should raise HTTPNotFound when query raises NoResultFound
         """
         uid = str(uuid4())
         mrequest.matchdict = {"wallet_uid": uid}
-        mquery.get_by_uid.side_effect = NoResultFound()
+        mquery.get_active_by_uid.side_effect = NoResultFound()
 
         with raises(HTTPNotFound):
             view._get_wallet()
 
-        mquery.get_by_uid.assert_called_once_with(uid)
+        mquery.get_active_by_uid.assert_called_once_with(
+            uid, mget_user.return_value.uid
+        )

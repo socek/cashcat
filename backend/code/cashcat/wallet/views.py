@@ -42,10 +42,7 @@ class WalletsView(BaseView):
 class WalletView(BaseView):
     def validate(self):
         super().validate()
-        user = self.get_user()
-        wallet = self._get_wallet()
-        if not wallet.is_accessible_by(user):
-            raise HTTPNotFound()
+        self._get_wallet()
 
     def get(self):
         """
@@ -66,6 +63,8 @@ class WalletView(BaseView):
     @cache_per_request("wallet")
     def _get_wallet(self):
         try:
-            return self.query().get_by_uid(self.request.matchdict["wallet_uid"])
+            return self.query().get_active_by_uid(
+                self.request.matchdict["wallet_uid"], self.get_user().uid
+            )
         except NoResultFound:
             raise HTTPNotFound()
