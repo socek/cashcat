@@ -14,8 +14,11 @@ from cashcat.application.app import CashcatConfigurator
 from cashcat.auth.drivers import UserCommand
 from cashcat.auth.drivers import UserQuery
 from cashcat.auth.models import User
+from cashcat.bill.drivers import BillCommand
+from cashcat.bill.drivers import BillQuery
 from cashcat.wallet.drivers import WalletCommand
 from cashcat.wallet.drivers import WalletQuery
+from cashcat.wallet.models import Wallet
 
 
 class DeleteOnExit(object):
@@ -58,6 +61,10 @@ class CashcatFixturesMixin(object):
         "password": "mypassword",
     }
 
+    wallet_data = {"name": "Wallet1", "type": "private"}
+
+    second_wallet_data = {"name": "Wallet2", "type": "private"}
+
     contest_user_data = {"name": "contest1 from user1"}
 
     contest_second_user_data = {"name": "contest1 from user2"}
@@ -87,6 +94,14 @@ class CashcatFixturesMixin(object):
         return WalletCommand(app.dbsession)
 
     @fixture
+    def bill_query(self, app):
+        return BillQuery(app.dbsession)
+
+    @fixture
+    def bill_command(self, app):
+        return BillCommand(app.dbsession)
+
+    @fixture
     def user(self, user_command):
         uid = uuid4()
         user_data = dict(self.user_data)
@@ -107,6 +122,24 @@ class CashcatFixturesMixin(object):
         user_command.create(user)
         yield user
         user_command.force_delete(uid)
+
+    @fixture
+    def wallet(self, wallet_command, user):
+        uid = uuid4()
+        wallet = Wallet(uid, owner_uid=user.uid, **self.wallet_data)
+        wallet.id = uid
+        wallet.owner_uid = user.uid
+        wallet_command.create(wallet)
+        yield wallet
+        wallet_command.force_delete(uid)
+
+    @fixture
+    def second_wallet(self, wallet_command, user):
+        uid = uuid4()
+        wallet = Wallet(uid, owner_uid=user.uid, **self.second_wallet_data)
+        wallet_command.create(wallet)
+        yield wallet
+        wallet_command.force_delete(uid)
 
 
 class IntegrationFixture(CashcatFixturesMixin, BaseIntegrationFixture):

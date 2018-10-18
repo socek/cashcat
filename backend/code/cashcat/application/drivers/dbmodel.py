@@ -29,5 +29,10 @@ class Base(object):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    def update_model(self, model):
+        model.uid = self.uid
+        model.created_at = self.created_at
+        model.updated_at = self.updated_at
+
 
 SqlDataModel = declarative_base(metadata=metadata, cls=Base)

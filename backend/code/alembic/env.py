@@ -9,5 +9,6 @@ from cashcat.application.drivers.dbmodel import SqlDataModel
 
 import cashcat.auth.drivers.dbmodels
 import cashcat.wallet.drivers.dbmodels
+import cashcat.bill.drivers.dbmodels
 
 AlembicScript(app, SqlDataModel, "dbsession").run()
