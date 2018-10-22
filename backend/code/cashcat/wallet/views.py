@@ -12,8 +12,23 @@ from cashcat.wallet.schemas import WalletSchema
 
 
 class BaseView(AuthenticatedView):
-    query = driver(WalletQuery)
-    command = driver(WalletCommand)
+    wallet_query = driver(WalletQuery)
+    wallet_command = driver(WalletCommand)
+
+
+class BaseWalletView(BaseView):
+    def validate(self):
+        super().validate()
+        self._get_wallet()
+
+    @cache_per_request("wallet")
+    def _get_wallet(self):
+        try:
+            return self.wallet_query().get_active_by_uid(
+                self.request.matchdict["wallet_uid"], self.get_user().uid
+            )
+        except NoResultFound:
+            raise HTTPNotFound()
 
 
 class WalletsView(BaseView):
@@ -22,7 +37,7 @@ class WalletsView(BaseView):
         Get list of wallets.
         """
         owner = self.get_user()
-        wallets = self.query().list_for_owner(owner)
+        wallets = self.wallet_query().list_for_owner(owner)
         schema = WalletSchema(many=True)
         return schema.dump(wallets)
 
@@ -35,15 +50,11 @@ class WalletsView(BaseView):
         wallet.uid = uuid4()
         wallet.type = "private"
         wallet.owner_uid = self.get_user().uid
-        self.command().create(wallet)
+        self.wallet_command().create(wallet)
         return schema.dump(wallet)
 
 
-class WalletView(BaseView):
-    def validate(self):
-        super().validate()
-        self._get_wallet()
-
+class WalletView(BaseWalletView):
     def get(self):
         """
         Get wallet data.
@@ -56,15 +67,6 @@ class WalletView(BaseView):
         """
         schema = WalletSchema(partial=("uid", "type", "owner_uid"))
         wallet = self.get_validated_fields(schema)
-        self.command().update_by_uid(
+        self.wallet_command().update_by_uid(
             self.request.matchdict["wallet_uid"], {"name": wallet.name}
         )
-
-    @cache_per_request("wallet")
-    def _get_wallet(self):
-        try:
-            return self.query().get_active_by_uid(
-                self.request.matchdict["wallet_uid"], self.get_user().uid
-            )
-        except NoResultFound:
-            raise HTTPNotFound()

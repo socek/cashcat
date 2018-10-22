@@ -18,12 +18,12 @@ from cashcat.wallet.views import WalletsView
 class Fixtures(ViewFixture):
     @fixture
     def mquery(self, view):
-        with patch.object(view, "query") as mock:
+        with patch.object(view, "wallet_query") as mock:
             yield mock.return_value
 
     @fixture
     def mcommand(self, view):
-        with patch.object(view, "command") as mock:
+        with patch.object(view, "wallet_command") as mock:
             yield mock.return_value
 
     @fixture
