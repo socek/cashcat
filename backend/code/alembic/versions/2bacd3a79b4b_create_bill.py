@@ -24,8 +24,8 @@ def upgrade():
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.Column('place', sa.String(), nullable=True),
-    sa.Column('billed_at', sa.String(), nullable=True),
-    sa.Column('wallet_uid', postgresql.UUID(as_uuid=True), nullable=False),
+    sa.Column('billed_at', sa.String(), nullable=False),
+    sa.Column('wallet_uid', postgresql.UUID(as_uuid=False), nullable=False),
     sa.ForeignKeyConstraint(['wallet_uid'], ['wallets.uid'], name=op.f('fk_bills_wallet_uid_wallets')),
     sa.PrimaryKeyConstraint('uid', name=op.f('pk_bills'))
     )

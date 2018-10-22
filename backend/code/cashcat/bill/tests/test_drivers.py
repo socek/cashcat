@@ -1,5 +1,5 @@
-from uuid import uuid4
 from datetime import datetime
+from uuid import uuid4
 
 from pytest import raises
 
@@ -89,5 +89,28 @@ class TestBillDriver(IntegrationFixture):
 
             with raises(NoResultFound):
                 bill_query.get_active_by_uid(uid, second_wallet.uid)
+        finally:
+            bill_command.force_delete(uid)
+
+    def test_creating_with_items(self, wallet, bill_query, bill_command):
+        """
+        query and command should operate on bill items.
+        """
+        uid = uuid4()
+        bill = Bill(
+            uid, place="lidl", billed_at=datetime.utcnow(), wallet_uid=wallet.uid
+        )
+        bill.add_item(uuid4(), name="cola", quantity=1, value=10)
+        bill.add_item(uuid4(), name="celery", quantity=1.25, value=10)
+        bill_command.create(bill)
+
+        try:
+            bill = bill_query.get_active_by_uid(
+                uid, wallet_uid=wallet.uid, with_items=True
+            )
+
+            assert bill.place == "lidl"
+            item_names = set([item.name for item in bill.items])
+            assert set(["cola", "celery"]) == item_names
         finally:
             bill_command.force_delete(uid)
