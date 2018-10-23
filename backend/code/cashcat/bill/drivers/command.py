@@ -33,3 +33,6 @@ class BillCommand(Command):
         ).delete()
         self.database.query(self.model).filter(self.model.uid == uid).delete()
         self.database.commit()
+
+    def patch_by_uid(self, uid, update, create_items, remove_items, items_update):
+        pass

@@ -1,7 +1,9 @@
+from marshmallow import Schema
 from marshmallow import post_load
 from marshmallow import pre_dump
 from marshmallow.fields import Date
 from marshmallow.fields import Decimal
+from marshmallow.fields import Raw
 from marshmallow.fields import Nested
 from marshmallow.fields import String
 from marshmallow.fields import UUID
@@ -61,7 +63,6 @@ class BillSchema(ModelSchema):
 
     @post_load
     def make_model(self, data):
-        print("hej")
         return Bill(
             uid=data.get("uid"),
             place=data.get("place"),
@@ -69,3 +70,9 @@ class BillSchema(ModelSchema):
             wallet_uid=data.get("wallet_uid"),
             items=[item for item in data.get("items", [])],
         )
+
+
+class PatchSchema(Schema):
+    op = String(required=True, validate=not_blank)
+    path = String(required=True, validate=not_blank)
+    value = Raw(required=True)
