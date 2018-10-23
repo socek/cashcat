@@ -1,5 +1,7 @@
 from collections import defaultdict
 
+from cashcat.bill.models import BillItem
+
 
 class PatchError(Exception):
     def __init__(self, patch, message):
@@ -56,14 +58,14 @@ class BillPatcher(object):
                 patch, "Only allow to replace: /place, /billed_at or /items/{uid}/{key}"
             )
         if key in ["name", "quantity", "value"]:
-            self.items_update[uid][key] = patch['value']
+            self.items_update[uid][key] = patch["value"]
         else:
             self._parse_error(
                 patch, "Only allow to replace: /place, /billed_at or /items/{uid}/{key}"
             )
 
     def _create_item(self, patch):
-        return self.create_items.append(patch["value"])
+        return self.create_items.append(BillItem(None, **patch["value"]))
 
     def _remove_item(self, patch):
         return self.remove_items.append(patch["value"])

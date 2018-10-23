@@ -182,6 +182,11 @@ class TestBillView(Fixtures):
         with patch.object(view, "_get_wallet") as mock:
             yield mock
 
+    @fixture
+    def mbill_item(self):
+        with patch("cashcat.bill.patcher.BillItem") as mock:
+            yield mock
+
     def test_validate(self, view, mget_user, mget_wallet, mget_bill):
         """
         .validate should do nothing when everything is ok
@@ -213,7 +218,7 @@ class TestBillView(Fixtures):
             ],
         }
 
-    def test_patch(self, view, mget_bill, mrequest, mcommand):
+    def test_patch(self, view, mget_bill, mrequest, mcommand, mbill_item):
         """
         .patch should parse json patch (http://jsonpatch.com/)
         """
@@ -221,7 +226,11 @@ class TestBillView(Fixtures):
         wallet_uid = str(uuid4())
         mrequest.json_body = [
             {"op": "replace", "path": "/place", "value": "new_place"},
-            {"op": "add", "path": "/items", "value": "new_item"},
+            {
+                "op": "add",
+                "path": "/items",
+                "value": {"name": "coke", "quantity": 1.2, "value": 1.3},
+            },
             {"op": "remove", "path": "/items", "value": "item_uid"},
         ]
         mrequest.matchdict = {"bill_uid": bill_uid, "wallet_uid": wallet_uid}
@@ -229,8 +238,13 @@ class TestBillView(Fixtures):
         view.patch()
 
         mcommand.patch_by_uid.assert_called_once_with(
-            bill_uid, {"place": "new_place"}, ["new_item"], ["item_uid"], {}
+            bill_uid,
+            {"place": "new_place"},
+            [mbill_item.return_value],
+            ["item_uid"],
+            {},
         )
+        mbill_item.assert_called_once_with(None, name="coke", quantity=1.2, value=1.3)
 
     def test_patch_item(self, view, mget_bill, mrequest, mcommand):
         """
