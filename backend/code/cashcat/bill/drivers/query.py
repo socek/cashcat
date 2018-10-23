@@ -22,7 +22,7 @@ class BillQuery(Query):
         try:
             bill = self._get_active_by_uid(uid, wallet_uid).one().to_model()
             if with_items:
-                bill.items = [obj.to_model() for obj in self._get_items(uid)]
+                bill.items = [obj.to_model() for obj in self._get_active_items(uid)]
             return bill
         except (SANoResultFound, DataError):
             raise NoResultFound
@@ -36,8 +36,9 @@ class BillQuery(Query):
         ):
             yield obj.to_model()
 
-    def _get_items(self, bill_uid):
+    def _get_active_items(self, bill_uid):
         return self.database.query(self.item_data_model).filter(
-            self.item_data_model.bill_uid == bill_uid
+            self.item_data_model.bill_uid == bill_uid,
+            self.item_data_model.is_active.is_(True)
         )
 

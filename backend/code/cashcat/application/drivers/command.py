@@ -19,11 +19,14 @@ class Command(BaseCommand):
         self.database.commit()
         obj.update_model(model)
 
-    def update_by_uid(self, uid, update):
+    def _update_by_uid(self, uid, update):
         update_raw = {}
         for key, value in update.items():
             update_raw[getattr(self.model, key)] = value
         self.query._get_by_uid(uid).update(update_raw)
+
+    def update_by_uid(self, uid, update):
+        self._update_by_uid(uid, update)
         self.database.commit()
 
     def delete(self, uid):
