@@ -3,7 +3,7 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
       <h1 class="h2"><icon name="wallet" /> Portfele</h1>
       <div class="btn-toolbar mb-2 mb-md-0">
-          +++
+          <new-dialog></new-dialog>
       </div>
     </div>
     <b-table ref="table" id="wallet-list-table" :busy.sync="isBusy" show-empty striped bordered hover :items="provider" :fields="fields">
@@ -11,12 +11,12 @@
         Brak elementów do wyświetlenia.
       </template>
     </b-table>
-    <date-picker v-model="date" :config="options"></date-picker>
   </div>
 </template>
 
 <script>
 import billResource from '@/bills/resource'
+import newDialog from '@/bills/list/new_dialog'
 
 export default {
   data () {
@@ -24,11 +24,6 @@ export default {
       isBusy: false,
       fields: [ {key: 'place', label: 'Miejsce'}, {key: 'billed_at', label: 'Dzień'} ],
       items: [],
-      date: '',
-      options: {
-        format: 'YYYY-MM-DD',
-        useCurrent: true
-      },
       resource: billResource(this)
     }
   },
@@ -43,6 +38,7 @@ export default {
     }
   },
   components: {
+    newDialog
   }
 }
 </script>
