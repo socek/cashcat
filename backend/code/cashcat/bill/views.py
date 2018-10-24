@@ -26,7 +26,7 @@ class BillsView(BaseView):
         Get list of bills.
         """
         wallet = self._get_wallet()
-        bills = self.bill_query().list_for_wallet(wallet)
+        bills = self.bill_query().list_for_wallet(wallet.uid)
         schema = BillSchema(many=True)
         return schema.dump(bills)
 
