@@ -11,6 +11,7 @@
         Brak elementów do wyświetlenia.
       </template>
     </b-table>
+    <date-picker v-model="date" :config="options"></date-picker>
   </div>
 </template>
 
@@ -23,6 +24,11 @@ export default {
       isBusy: false,
       fields: [ {key: 'place', label: 'Miejsce'}, {key: 'billed_at', label: 'Dzień'} ],
       items: [],
+      date: '',
+      options: {
+        format: 'YYYY-MM-DD',
+        useCurrent: true
+      },
       resource: billResource(this)
     }
   },

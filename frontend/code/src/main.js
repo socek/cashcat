@@ -6,6 +6,7 @@ import VueResource from 'vue-resource'
 import 'vue-awesome/icons'
 import Icon from 'vue-awesome/components/Icon'
 import VueNativeSock from 'vue-native-websocket'
+import datePicker from 'vue-bootstrap-datetimepicker'
 
 import App from '@/App'
 import router from '@/routing'
@@ -16,6 +17,7 @@ import contexts from '@/contexts'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import '@/common/style.css'
+import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css'
 
 Vue.config.productionTip = true
 Vue.use(BootstrapVue)
@@ -41,6 +43,8 @@ Vue.use(
   Context,
   {contexts}
 )
+
+Vue.use(datePicker)
 
 /* eslint-disable no-new */
 export default new Vue({
