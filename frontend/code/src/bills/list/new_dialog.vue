@@ -5,10 +5,10 @@
     </b-btn>
 
     <b-modal id="newBillDialog" ref="newBillDialog" title="Nowy Rachunek" hide-footer>
-      <cc-form ref="form" @submit="onSubmit" @cancel="hideModal">
-        <text-input name="place" label="Miejsce:" placeholder="nazwa sklepu"></text-input>
-        <text-input name="billed_at" label="Kiedy:" placeholder="dzień zakupu"></text-input>
-      </cc-form>
+      <ccform ref="form" @submit="onSubmit" @cancel="hideModal">
+        <text-input name="place" label="Miejsce" placeholder="nazwa sklepu"></text-input>
+        <text-input name="billed_at" label="Kiedy" placeholder="dzień zakupu"></text-input>
+      </ccform>
     </b-modal>
   </div>
 </template>
@@ -17,7 +17,7 @@
 import billResource from '@/bills/resource'
 import itemInput from '@/bills/list/item_input'
 import textInput from '@/forms/text'
-import ccForm from '@/forms/form'
+import ccform from '@/forms/form'
 
 export default {
   data () {
@@ -31,13 +31,6 @@ export default {
     }
   },
   methods: {
-    refresh () {
-      for (let input of this.form.inputs) {
-        if (input) {
-          input.resetInput()
-        }
-      }
-    },
     showModal () {
       this.$refs.form.reset()
       this.$refs.newBillDialog.show()
@@ -66,7 +59,6 @@ export default {
         quantity: 1.0,
         value: -1.0
       })
-      this.fields = Object.assign({}, this.fields) // refresh the whole object for vue
     },
     countSum () {
       this.sum = 0
@@ -89,7 +81,7 @@ export default {
   components: {
     itemInput,
     textInput,
-    ccForm
+    ccform
   }
 }
 </script>
