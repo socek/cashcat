@@ -5,95 +5,91 @@
     </b-btn>
 
     <b-modal id="newBillDialog" ref="newBillDialog" title="Nowy Rachunek" hide-footer>
-      <form @submit.prevent="onSubmit">
-        <b-form-invalid-feedback  :force-show="true"
-                                  v-for="error in errors._schema"
-                                  :key="error">
-          {{ error }}
-        </b-form-invalid-feedback>
-
-        <b-form-group id="billPlaceFieldGroup"
-                      label="Miejsce:"
-                      label-for="billPlaceField">
-          <b-form-input id="billPlaceField"
-                        type="text"
-                        placeholder="sklep"
-                        v-model.trim="fields.place"
-                        :state="errors.place.length == 0 ? null : false">
-          </b-form-input>
-          <b-form-invalid-feedback v-for="error in errors.place" :key="error">
-            {{ error }}
-          </b-form-invalid-feedback>
-        </b-form-group>
-
-        <b-form-group id="billBilledAtFieldGroup"
-                      label="Dzień:"
-                      label-for="billBilledAtField">
-          <date-picker v-bind:class="{'is-invalid': errors.billed_at.length == 0 ? null : true}" v-model="fields.billed_at" :config="datepicker_options"></date-picker>
-          <b-form-invalid-feedback v-for="error in errors.billed_at" :key="error">
-            {{ error }}
-          </b-form-invalid-feedback>
-        </b-form-group>
-
-        <input type="submit" value="Zapisz" class="btn btn-primary">
-        <b-btn variant="danger" @click="hideModal">Anuluj</b-btn>
-      </form>
+      <cc-form ref="form" @submit="onSubmit" @cancel="hideModal">
+        <text-input name="place" label="Miejsce:" placeholder="nazwa sklepu"></text-input>
+        <text-input name="billed_at" label="Kiedy:" placeholder="dzień zakupu"></text-input>
+      </cc-form>
     </b-modal>
   </div>
 </template>
 
 <script>
 import billResource from '@/bills/resource'
+import itemInput from '@/bills/list/item_input'
+import textInput from '@/forms/text'
+import ccForm from '@/forms/form'
 
 export default {
   data () {
     return {
-      fields: {
-        place: '',
-        billed_at: ''
-      },
-      errors: {
-        _schema: [],
-        place: [],
-        billed_at: []
-      },
       resource: billResource(this),
       datepicker_options: {
         format: 'YYYY-MM-DD',
         useCurrent: true
-      }
+      },
+      sum: 0
     }
   },
   methods: {
     refresh () {
-      for (let name in this.fields) {
-        this.fields[name] = ''
-        this.errors[name] = ''
+      for (let input of this.form.inputs) {
+        if (input) {
+          input.resetInput()
+        }
       }
-      this.errors._schema = ''
     },
     showModal () {
-      this.refresh()
+      this.$refs.form.reset()
       this.$refs.newBillDialog.show()
     },
     hideModal () {
       this.$refs.newBillDialog.hide()
     },
-    onSubmit () {
+    onSubmit (event, form) {
       this.resource.create({}, this.fields).then((response) => {
         this.hideModal()
         this.$root.$emit('bv::refresh::table', 'bill-list-table')
       }).catch((response) => {
         for (let item in this.errors) {
-          this.errors[item] = []
+          form.errors[item] = []
         }
         for (let item in response.body) {
-          console.log(item, response.body[item])
-          this.errors[item] = response.body[item]
+          form.errors[item] = response.body[item]
         }
-        console.log(this.errors)
+        this.$refs.form.updateForm(form)
       })
+    },
+    createEmptyItem () {
+      this.fields.items.push({
+        index: this.fields.items.length,
+        name: '',
+        quantity: 1.0,
+        value: -1.0
+      })
+      this.fields = Object.assign({}, this.fields) // refresh the whole object for vue
+    },
+    countSum () {
+      this.sum = 0
+      for (let index in this.fields.items) {
+        let item = this.fields.items[index]
+        if (item.name) {
+          this.sum += item.quantity * item.value
+        }
+      }
+    },
+    onChange () {
+      let items = this.fields.items
+      let value = items[items.length - 1].name
+      if (value) {
+        this.createEmptyItem()
+      }
+      this.countSum()
     }
+  },
+  components: {
+    itemInput,
+    textInput,
+    ccForm
   }
 }
 </script>
