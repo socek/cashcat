@@ -1,3 +1,5 @@
+from datetime import date
+
 from marshmallow import Schema
 from marshmallow import post_load
 from marshmallow import pre_dump
@@ -56,10 +58,15 @@ class BillSchema(ModelSchema):
         return dict(
             uid=obj.uid,
             place=obj.place,
-            billed_at=obj.billed_at,
+            billed_at=self._to_date(obj.billed_at),
             wallet_uid=obj.wallet_uid,
             items=[item for item in obj.items],
         )
+
+    def _to_date(self, obj):
+        if isinstance(obj, str):
+            return date.fromisoformat(obj)
+        return obj
 
     @post_load
     def make_model(self, data):

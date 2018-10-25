@@ -39,7 +39,7 @@ export default {
       this.$refs.newBillDialog.hide()
     },
     onSubmit (event, form) {
-      this.resource.create({}, this.fields).then((response) => {
+      this.resource.create({}, form.fields).then((response) => {
         this.hideModal()
         this.$root.$emit('bv::refresh::table', 'bill-list-table')
       }).catch((response) => {

@@ -91,7 +91,7 @@ class TestBillsView(Fixtures):
                 "wallet_uid": str(bill.wallet_uid),
             }
         ]
-        mquery.list_for_wallet.assert_called_once_with(mget_wallet.return_value)
+        mquery.list_for_wallet.assert_called_once_with(mget_wallet.return_value.uid)
 
     @mark.parametrize(
         "key, value",
@@ -193,13 +193,12 @@ class TestBillView(Fixtures):
         """
         assert view.validate() is None
 
-    def test_get(self, view, mget_bill):
+    @mark.parametrize("billed_at", [date(2018, 1, 3), "2018-01-03"])
+    def test_get(self, view, mget_bill, billed_at):
         """
         .get should return serialized bill data
         """
-        bill = Bill(
-            uid=uuid4(), place="Lidl", billed_at=date(2018, 1, 3), wallet_uid=uuid4()
-        )
+        bill = Bill(uid=uuid4(), place="Lidl", billed_at=billed_at, wallet_uid=uuid4())
         bill.add_item(uuid4(), name="coke", quantity=1.4, value=1.5)
         mget_bill.return_value = bill
 
