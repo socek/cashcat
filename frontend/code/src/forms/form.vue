@@ -47,10 +47,10 @@
       }
     },
     methods: {
-      onSubmit (event, data) {
+      onSubmit (event) {
         this.$emit('submit', event, this.form)
       },
-      onCancel (event, data) {
+      onCancel (event) {
         this.$emit('cancel', event, this.form)
       },
       onInput () {
@@ -72,6 +72,10 @@
         for (let input of this.form.inputs) {
           input.updateForm(form)
         }
+      },
+      setDefaults (defaults) {
+        this.form.defaults = defaults
+        this.reset()
       },
       reset () {
         for (let input of this.form.inputs) {

@@ -12,10 +12,12 @@
     data () {
       let form = {
         fields: {},
-        errors: {}
+        errors: {},
+        defaults: {}
       }
       form.fields[this.name] = ''
       form.errors[this.name] = []
+      form.defaults[this.name] = this.default ? this.default : ''
       let options = {}
       if (this.placeholder) {
         options.placeholder = this.placeholder
@@ -48,7 +50,7 @@
         this.$emit('input', this.form)
       },
       resetInput () {
-        this.form.fields[this.name] = this.default ? this.default : ''
+        this.form.fields[this.name] = this.form.defaults[this.name]
         this.form.errors[this.name] = []
         this.form = Object.assign({}, this.form)
         this.state = 'normal'

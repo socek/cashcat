@@ -11,9 +11,6 @@
 </template>
 
 <script>
-import textInput from '@/forms/text'
-import passwordInput from '@/forms/password'
-import ccform from '@/forms/form'
 import authResource from '@/auth/resource'
 
 export default {
@@ -29,11 +26,6 @@ export default {
         this.$router.push({name: 'WalletList'})
       }).catch(this.$refs.form.catchError)
     }
-  },
-  components: {
-    textInput,
-    passwordInput,
-    ccform
   }
 }
 </script>

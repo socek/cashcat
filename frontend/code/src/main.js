@@ -33,6 +33,15 @@ Vue.http.interceptors.push((request, next) => {
 })
 Vue.component('icon', Icon)
 
+import passwordInput from '@/forms/password'
+import textInput from '@/forms/text'
+import ccform from '@/forms/form'
+import dialogform from '@/common/dialogForm'
+Vue.component('text-input', textInput)
+Vue.component('ccform', ccform)
+Vue.component('password-inpurt', passwordInput)
+Vue.component('dialogform', dialogform)
+
 Vue.use(VueNativeSock, 'ws://' + window.location.hostname + '/wsapp', {
   connectManually: true
 })

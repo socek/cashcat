@@ -16,8 +16,6 @@
 <script>
 import billResource from '@/bills/resource'
 import itemInput from '@/bills/list/item_input'
-import textInput from '@/forms/text'
-import ccform from '@/forms/form'
 
 export default {
   data () {
@@ -71,9 +69,7 @@ export default {
     }
   },
   components: {
-    itemInput,
-    textInput,
-    ccform
+    itemInput
   }
 }
 </script>
