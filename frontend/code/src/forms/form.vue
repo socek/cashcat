@@ -1,5 +1,6 @@
 <template>
   <form @submit.prevent="onSubmit">
+    <div class="invalid-feedback" style="display: block;" v-for="message in form.errors._schema">{{ message }}</div>
     <slot></slot>
 
     <input type="submit" value="Zapisz" class="btn btn-primary">
@@ -42,6 +43,17 @@
       },
       onInput () {
         this.$emit('input', this.form)
+      },
+      catchError (response) {
+        for (let item in this.form.errors) {
+          this.form.errors[item] = []
+        }
+        for (let item in response.body) {
+          this.form.errors[item] = response.body[item]
+        }
+        for (let input of this.form.inputs) {
+          input.updateForm(this.form)
+        }
       },
       updateForm (form) {
         this.form = form

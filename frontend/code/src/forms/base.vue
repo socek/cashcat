@@ -15,7 +15,8 @@
       return {
         form: form,
         options: options,
-        id: ''
+        id: '',
+        state: 'normal'
       }
     },
     methods: {
@@ -28,7 +29,12 @@
         this.form = form
       },
       updateForm (form) {
-        this.form = form
+        this.form = Object.assign({}, form)
+        if (this.form.errors[this.name].length !== 0) {
+          this.state = 'error'
+        } else {
+          this.state = 'normal'
+        }
       },
       onInput () {
         this.$emit('input', this.form)
@@ -37,6 +43,7 @@
         this.form.fields[this.name] = this.default ? this.default : ''
         this.form.errors[this.name] = []
         this.form = Object.assign({}, this.form)
+        this.state = 'normal'
         this.onInput()
       }
     }

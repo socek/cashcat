@@ -42,15 +42,7 @@ export default {
       this.resource.create({}, form.fields).then((response) => {
         this.hideModal()
         this.$root.$emit('bv::refresh::table', 'bill-list-table')
-      }).catch((response) => {
-        for (let item in this.errors) {
-          form.errors[item] = []
-        }
-        for (let item in response.body) {
-          form.errors[item] = response.body[item]
-        }
-        this.$refs.form.updateForm(form)
-      })
+      }).catch(this.$refs.form.catchError)
     },
     createEmptyItem () {
       this.fields.items.push({
