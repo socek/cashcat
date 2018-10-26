@@ -3,14 +3,27 @@
     <div class="invalid-feedback" style="display: block;" v-for="message in form.errors._schema">{{ message }}</div>
     <slot></slot>
 
-    <input type="submit" value="Zapisz" class="btn btn-primary">
-    <b-btn variant="danger" @click="onCancel">Anuluj</b-btn>
+    <input type="submit" :value="okButtonLabel" class="btn btn-primary">
+    <b-btn v-if="showCancel" variant="danger" @click="onCancel">Anuluj</b-btn>
   </form>
 </template>
 
 <script>
   export default {
-    props: ['id'],
+    props: {
+      id: {
+        type: String,
+        default: ''
+      },
+      showCancel: {
+        type: Boolean,
+        default: true
+      },
+      okButtonLabel: {
+        type: String,
+        default: 'Zapisz'
+      }
+    },
     data () {
       return {
         form: {
@@ -19,8 +32,7 @@
           inputs: [],
           errors: {
             _schema: []
-          },
-          id: this.id ? this.id : ''
+          }
         }
       }
     },

@@ -1,6 +1,14 @@
 <script>
   export default {
-    props: ['name', 'default', 'placeholder', 'label'],
+    props: {
+      name: {
+        type: String,
+        required: true
+      },
+      default: Object,
+      placeholder: String,
+      label: String
+    },
     data () {
       let form = {
         fields: {},
