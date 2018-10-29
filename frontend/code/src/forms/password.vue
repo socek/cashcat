@@ -1,8 +1,8 @@
 <template>
-  <div role="group" class="b-form-group form-group">
-    <label :for="id" class="col-form-label pt-0">{{ label }}:</label>
-    <input :id="id" type="password" v-model="form.fields[name]" v-bind="options" class="form-control" @input="onInput" :class="{'is-invalid': state == 'error'}">
-    <div class="invalid-feedback" style="display: block;" v-for="message in form.errors[name]">{{ message }}</div>
+  <div role="group" class="form-group">
+    <label v-if="label" class="col-form-label">{{ label }}:</label>
+    <input type="password" v-model="value.value" class="form-control" :class="{'is-invalid': state == 'error'}">
+    <div class="invalid-feedback" style="display: block;" v-for="message in value.errors">{{ message }}</div>
   </div>
 </template>
 

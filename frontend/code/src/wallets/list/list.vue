@@ -11,7 +11,7 @@
       <router-link class="nav-link active" :to="{ name: 'BillList', params: {wallet_uid: data.item.uid} }">{{ data.item.name }}</router-link>
     </template>
       <template slot="actions" slot-scope="data">
-        <editDialog :wallet_uid="data.item.uid" @success="onSuccess"></editDialog>
+
       </template>
       <template slot="empty">
         Brak elementów do wyświetlenia.
@@ -23,7 +23,8 @@
 <script>
 import walletResource from '@/wallets/resource'
 import newDialog from '@/wallets/list/new_dialog'
-import editDialog from '@/wallets/list/edit_dialog'
+// import editDialog from '@/wallets/list/edit_dialog'
+// <editDialog :wallet_uid="data.item.uid" @success="onSuccess"></editDialog>
 
 export default {
   data () {
@@ -31,6 +32,10 @@ export default {
       isBusy: false,
       fields: [ {key: 'name', label: 'Nazwa'}, {key: 'actions', label: 'Akcje'} ],
       items: [],
+      myval: {
+        name: 'myname',
+        count: 0
+      },
       resource: walletResource(this)
     }
   },
@@ -45,8 +50,8 @@ export default {
     }
   },
   components: {
-    newDialog,
-    editDialog
+    newDialog
+    // editDialog,
   }
 }
 </script>

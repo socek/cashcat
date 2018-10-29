@@ -5,7 +5,7 @@
     </b-btn>
 
     <b-modal ref="modal" :size="size" :title="title" hide-footer>
-      <ccform ref="form" @submit="onSubmit" @cancel="$refs.modal.hide()" v-show="!isBusy">
+      <ccform ref="form" v-model="value" @submit="onSubmit" @cancel="$refs.modal.hide()" v-show="!isBusy">
         <slot name="content"></slot>
       </ccform>
       <div v-show="isBusy" class="modal-spiner">
@@ -29,7 +29,10 @@
       size: {
         default: 'md'
       },
-      saveCall: {}
+      value: {
+        type: Object,
+        required: true
+      }
     },
     data () {
       return {
@@ -47,14 +50,18 @@
             this.isBusy = false
           })
         } else {
-          this.$refs.form.reset()
+          this.$refs.form.resetForm()
         }
       },
-      onSubmit (event, form) {
-        this.saveCall(form).then((response) => {
-          this.$refs.modal.hide()
-          this.$emit('success')
-        }).catch(this.$refs.form.catchError)
+      onSubmit (fields) {
+        this.$emit('submit', fields)
+      },
+      onSuccess () {
+        this.$refs.modal.hide()
+        this.$emit('success')
+      },
+      parseErrorResponse (response) {
+        return this.$refs.form.parseErrorResponse(response)
       }
     }
   }

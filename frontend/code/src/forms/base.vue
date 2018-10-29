@@ -1,11 +1,9 @@
 <script>
   export default {
     props: {
-      name: {
-        type: String,
+      value: {
         required: true
       },
-      default: [Object, Array],
       placeholder: String,
       label: {
         type: [String, Boolean],
@@ -13,51 +11,15 @@
       }
     },
     data () {
-      let form = {
-        fields: {},
-        errors: {},
-        defaults: {}
-      }
-      form.fields[this.name] = ''
-      form.errors[this.name] = []
-      form.defaults[this.name] = this.default ? this.default : ''
-      let options = {}
-      if (this.placeholder) {
-        options.placeholder = this.placeholder
-      }
       return {
-        form: form,
-        options: options,
-        id: '',
         state: 'normal'
       }
     },
     methods: {
-      setForm (form) {
-        form.fields[this.name] = ''
-        form.errors[this.name] = []
-        form.defaults[this.name] = this.default ? this.default : ''
-        form.inputs.push(this)
-        this.id = form.id + '_' + this.name
-        this.form = form
-      },
-      updateForm (form) {
-        this.form = Object.assign({}, form)
-        if (this.form.errors[this.name].length !== 0) {
-          this.state = 'error'
-        } else {
-          this.state = 'normal'
-        }
-      },
-      onInput () {
-        this.$emit('input', this.form)
-      },
       resetInput () {
-        this.form.fields[this.name] = this.form.defaults[this.name]
-        this.form.errors[this.name] = []
-        this.form = Object.assign({}, this.form)
-        this.state = 'normal'
-        this.onInput()
+        let obj = this.value
+        obj.value = obj.default
+        this.$emit('input', obj)
       }
     }
   }

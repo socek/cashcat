@@ -1,15 +1,17 @@
 <template>
   <dialogform
+    ref="form"
     title="Nowy portfel"
-    :saveCall="saveCall"
-    @success="$emit('success')">
+    v-model="form"
+    @success="$emit('success')"
+    @submit="onSubmit">
 
     <template slot="anhor">
       <icon name="plus-circle" />
     </template>
 
     <template slot="content">
-      <text-input name="name" label="Nazwa" placeholder="prywatny"></text-input>
+      <text-input v-model="form.name" label="Nazwa" placeholder="prywatny"></text-input>
     </template>
   </dialogform>
 </template>
@@ -18,9 +20,18 @@
 import walletResource from '@/wallets/resource'
 
 export default {
+  data () {
+    return {
+      form: {
+        name: ''
+      }
+    }
+  },
   methods: {
-    saveCall (form) {
-      return walletResource(this).create({}, form.fields)
+    onSubmit (form) {
+      return walletResource(this).create({}, form).then((response) => {
+        this.$refs.form.onSuccess()
+      }).catch(this.$refs.form.parseErrorResponse)
     }
   }
 }

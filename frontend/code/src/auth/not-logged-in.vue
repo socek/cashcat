@@ -2,9 +2,9 @@
   <div class="row justify-content-md-center">
     <div class="col-lg-4">
       <h1>Please log in</h1>
-      <ccform ref="form" @submit="onSubmit" :showCancel="false" okButtonLabel="Zaloguj">
-        <text-input name="email" label="Email" placeholder="email@email.com"></text-input>
-        <password-input name="password" label="Hasło"></password-input>
+      <ccform ref="form" v-model="form" @submit="onSubmit" :showCancel="false" okButtonLabel="Zaloguj">
+        <text-input v-model="form.email" label="Email" placeholder="email@email.com"></text-input>
+        <password-input v-model="form.password" label="Hasło"></password-input>
       </ccform>
     </div>
   </div>
@@ -16,15 +16,25 @@ import authResource from '@/auth/resource'
 export default {
   data () {
     return {
+      form: {
+        email: '',
+        password: ''
+      },
       resource: authResource(this)
     }
   },
   methods: {
-    onSubmit (event, form) {
-      this.resource.login({}, form.fields).then((response) => {
+    check () {
+      console.log(this.form)
+    },
+    reset () {
+      this.$refs.form.resetForm()
+    },
+    onSubmit (form) {
+      this.resource.login({}, form).then((response) => {
         this.$store.commit('auth/logIn', response.body.jwt)
         this.$router.push({name: 'WalletList'})
-      }).catch(this.$refs.form.catchError)
+      }).catch(this.$refs.form.parseErrorResponse)
     }
   }
 }
