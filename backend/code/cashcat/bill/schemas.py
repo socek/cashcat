@@ -27,9 +27,10 @@ def data_to_bill_item(data):
 
 
 class BillItemSchema(ModelSchema):
+    uid = UUID(required=False, allow_none=True)
     name = String(required=True, validate=not_blank)
-    quantity = Decimal(required=True, places=2, allow_none=False)
-    value = Decimal(required=True, places=2, allow_none=False)
+    quantity = Decimal(as_string=True, required=True, places=2, allow_none=False)
+    value = Decimal(as_string=True, required=True, places=2, allow_none=False)
     bill_uid = UUID(required=True, allow_none=False)
 
     @pre_dump

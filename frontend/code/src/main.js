@@ -37,10 +37,12 @@ import passwordInput from '@/forms/password'
 import textInput from '@/forms/text'
 import ccform from '@/forms/form'
 import dialogform from '@/common/dialogForm'
+import dateInput from '@/forms/date'
 Vue.component('text-input', textInput)
 Vue.component('ccform', ccform)
-Vue.component('password-inpurt', passwordInput)
+Vue.component('password-input', passwordInput)
 Vue.component('dialogform', dialogform)
+Vue.component('date-input', dateInput)
 
 Vue.use(VueNativeSock, 'ws://' + window.location.hostname + '/wsapp', {
   connectManually: true

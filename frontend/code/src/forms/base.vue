@@ -5,9 +5,12 @@
         type: String,
         required: true
       },
-      default: Object,
+      default: [Object, Array],
       placeholder: String,
-      label: String
+      label: {
+        type: [String, Boolean],
+        default: false
+      }
     },
     data () {
       let form = {

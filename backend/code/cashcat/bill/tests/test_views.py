@@ -1,6 +1,5 @@
 from copy import deepcopy
 from datetime import date
-from decimal import Decimal
 from unittest.mock import MagicMock
 from unittest.mock import patch
 from uuid import uuid4
@@ -84,8 +83,8 @@ class TestBillsView(Fixtures):
                     {
                         "uid": str(bill_item.uid),
                         "name": str(bill_item.name),
-                        "quantity": Decimal("1.40"),
-                        "value": Decimal("1.50"),
+                        "quantity": "1.40",
+                        "value": "1.50",
                     }
                 ],
                 "wallet_uid": str(bill.wallet_uid),
@@ -158,7 +157,6 @@ class TestBillsView(Fixtures):
         """
         mget_wallet.return_value.uid = uuid4()
         mrequest.json_body = deepcopy(self.bill_data)
-        print(mrequest.json_body)
         result = view.put()
         assert result["uid"]
         assert result["place"] == "Lidl"
@@ -211,8 +209,8 @@ class TestBillView(Fixtures):
                 {
                     "uid": str(bill.items[0].uid),
                     "name": "coke",
-                    "quantity": Decimal("1.40"),
-                    "value": Decimal("1.50"),
+                    "quantity": "1.40",
+                    "value": "1.50",
                 }
             ],
         }
@@ -296,29 +294,27 @@ class TestBillView(Fixtures):
         with raises(HTTPBadRequest):
             view.patch()
 
-    def test_get_bill(self, view, mquery, mrequest, mget_user):
+    def test_get_bill(self, view, mquery, mrequest):
         """
         ._get_bill should return bill object found by uid from url
         """
         uid = str(uuid4())
-        mrequest.matchdict = {"bill_uid": uid}
+        uid2 = str(uuid4())
+        mrequest.matchdict = {"bill_uid": uid, "wallet_uid": uid2}
 
         assert view._get_bill() == mquery.get_active_by_uid.return_value
-        mquery.get_active_by_uid.assert_called_once_with(
-            uid, mget_user.return_value.uid
-        )
+        mquery.get_active_by_uid.assert_called_once_with(uid, uid2, True)
 
-    def test_get_bill_when_not_found(self, view, mquery, mrequest, mget_user):
+    def test_get_bill_when_not_found(self, view, mquery, mrequest):
         """
         ._get_bill should raise HTTPNotFound when query raises NoResultFound
         """
         uid = str(uuid4())
-        mrequest.matchdict = {"bill_uid": uid}
+        uid2 = str(uuid4())
+        mrequest.matchdict = {"bill_uid": uid, "wallet_uid": uid2}
         mquery.get_active_by_uid.side_effect = NoResultFound()
 
         with raises(HTTPNotFound):
             view._get_bill()
 
-        mquery.get_active_by_uid.assert_called_once_with(
-            uid, mget_user.return_value.uid
-        )
+        mquery.get_active_by_uid.assert_called_once_with(uid, uid2, True)

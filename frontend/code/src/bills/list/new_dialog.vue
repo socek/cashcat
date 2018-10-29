@@ -1,75 +1,95 @@
 <template>
-  <div class="row justify-content-md-end">
-    <b-btn @click="showModal" variant="outline-success" size="sm" v-b-tooltip.hover title="Stwórz nowy rachunek">
-      <icon name="plus-circle" />
-    </b-btn>
+  <dialogform
+    title="Nowy rachunek"
+    size="lg"
+    :saveCall="saveCall"
+    @success="$emit('success')">
 
-    <b-modal id="newBillDialog" ref="newBillDialog" title="Nowy Rachunek" hide-footer>
-      <ccform ref="form" @submit="onSubmit" @cancel="hideModal">
-        <text-input name="place" label="Miejsce" placeholder="nazwa sklepu"></text-input>
-        <text-input name="billed_at" label="Kiedy" placeholder="dzień zakupu"></text-input>
-      </ccform>
-    </b-modal>
-  </div>
+    <template slot="anhor">
+      <icon name="plus-circle" />
+    </template>
+    <template slot="content">
+      <text-input name="place" label="Miejsce" placeholder="nazwa sklepu"></text-input>
+      <date-input name="billed_at" label="Kiedy"></date-input>
+      <item-row ref="items" name="items" :default="items"  @input="onInput"></item-row>
+      <div class="form-row">
+        <div role="group" class="form-group col-md-8">
+          &nbsp;
+        </div>
+        <div role="group" class="form-group col">
+          Suma:
+        </div>
+        <div role="group" class="form-group col">
+          {{sum}} PLN
+        </div>
+      </div>
+    </template>
+  </dialogform>
+
 </template>
 
 <script>
 import billResource from '@/bills/resource'
-import itemInput from '@/bills/list/item_input'
+import itemRow from '@/bills/list/item_input'
 
 export default {
   data () {
     return {
+      items: [{name: '', quantity: '', value: ''}],
       resource: billResource(this),
-      datepicker_options: {
-        format: 'YYYY-MM-DD',
-        useCurrent: true
-      },
       sum: 0
     }
   },
   methods: {
-    showModal () {
-      this.$refs.form.reset()
-      this.$refs.newBillDialog.show()
+    saveCall (form) {
+      let fields = Object.assign({}, form.fields)
+      fields.items = []
+      for (let item of form.fields.items) {
+        if (item.name || item.quantity || item.value) {
+          fields.items.push(item)
+        }
+      }
+      return this.resource.create({}, fields)
     },
-    hideModal () {
-      this.$refs.newBillDialog.hide()
-    },
-    onSubmit (event, form) {
-      this.resource.create({}, form.fields).then((response) => {
-        this.hideModal()
-        this.$root.$emit('bv::refresh::table', 'bill-list-table')
-      }).catch(this.$refs.form.catchError)
-    },
-    createEmptyItem () {
-      this.fields.items.push({
-        index: this.fields.items.length,
-        name: '',
-        quantity: 1.0,
-        value: -1.0
-      })
-    },
-    countSum () {
+    countSum (form) {
       this.sum = 0
-      for (let index in this.fields.items) {
-        let item = this.fields.items[index]
+      for (let item of form.fields.items) {
         if (item.name) {
           this.sum += item.quantity * item.value
         }
       }
+      this.sum = this.formatCurrency(this.sum)
     },
-    onChange () {
-      let items = this.fields.items
+    formatCurrency (value) {
+      let num = Number(value)
+
+      var countDecimals = function (value) {
+        if (Math.floor(value) === value) return 0
+        return value.toString().split('.')[1].length || 0
+      }
+
+      var decimal = countDecimals(num)
+
+      if (decimal < 2) {
+        num = num.toFixed(2)
+      }
+
+      if (decimal > 2) {
+        num = num.toFixed(decimal)
+      }
+      return num
+    },
+    onInput (form) {
+      let items = form.fields.items
       let value = items[items.length - 1].name
       if (value) {
-        this.createEmptyItem()
+        this.$refs.items.appendChild()
       }
-      this.countSum()
+      this.countSum(form)
     }
   },
   components: {
-    itemInput
+    itemRow
   }
 }
 </script>

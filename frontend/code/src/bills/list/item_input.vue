@@ -1,55 +1,41 @@
 <template>
-  <div class="form-row">
-    <div class="col">
-      <b-form-input id="billItemField"
-                    type="text"
-                    placeholder="produkt"
-                    v-model.trim="item.name"
-                    @change="onChange"
-                    :state="errors.name.length == 0 ? null : false">
-      </b-form-input>
-      <b-form-invalid-feedback v-for="error in errors.name" :key="error">
-        {{ error }}
-      </b-form-invalid-feedback>
+  <div>
+    <div class="form-row" v-for="item in form.fields[name]">
+      <div role="group" class="form-group col-md-6">
+        <input type="text" v-model="item.name" class="form-control" @input="onInput" placeholder="nazwa produktu">
+      </div>
+      <div role="group" class="form-group col-md-2">
+        <input type="text" v-model="item.quantity" class="form-control" @input="onInput" placeholder="1.00">
+      </div>
+      <currency v-model="item.value" @input="onInput"></currency>
     </div>
-    <div class="col">
-      <b-form-input id="billItemField"
-                    type="number"
-                    step="0.01"
-                    placeholder="ilość"
-                    v-model.number="item.quantity"
-                    @change="onChange"
-                    :state="errors.quantity.length == 0 ? null : false">
-      </b-form-input>
-      <b-form-invalid-feedback v-for="error in errors.quantity" :key="error">
-        {{ error }}
-      </b-form-invalid-feedback>
-    </div>
-    <currency :value="item.value" @change="onChangeCurrency" />
   </div>
 </template>
 
 <script>
 import currency from '@/bills/list/currency'
+import base from '@/forms/base'
+
 export default {
-  props: ['item'],
-  data () {
-    return {
-      errors: {
-        name: [],
-        quantity: [],
-        value: []
-      }
-    }
-  },
+  extends: base,
   methods: {
-    onChange () {
-      this.$emit('change')
+    resetInput () {
+      this.form.fields[this.name] = []
+      for (let item of this.form.defaults[this.name]) {
+        this.form.fields[this.name].push(Object.assign({}, item))
+      }
+      this.form.errors[this.name] = []
+      this.form = Object.assign({}, this.form)
+      this.state = 'normal'
+      this.onInput()
     },
-    onChangeCurrency (value) {
-      this.item.value = value
-      console.log('changed value!', value)
-      this.$emit('change')
+    appendChild () {
+      this.form.fields.items.push({
+        name: '',
+        quantity: '',
+        value: ''
+      })
+      this.form = Object.assign({}, this.form)
     }
   },
   components: {

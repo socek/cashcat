@@ -22,6 +22,7 @@ class BillCommand(Command):
         for item in bill.items:
             item_data = self.item_data_model()
             item_data.from_model(item)
+            item_data.bill_uid = bill_data.uid
             self.database.add(item_data)
             subojects.append((item, item_data))
 

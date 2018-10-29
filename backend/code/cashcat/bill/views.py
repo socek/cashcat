@@ -73,7 +73,9 @@ class BillView(BaseView):
     def _get_bill(self):
         try:
             return self.bill_query().get_active_by_uid(
-                self.request.matchdict["bill_uid"], self.get_user().uid
+                self.request.matchdict["bill_uid"],
+                self.request.matchdict["wallet_uid"],
+                True
             )
         except NoResultFound:
             raise HTTPNotFound()

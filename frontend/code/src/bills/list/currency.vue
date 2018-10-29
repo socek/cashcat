@@ -1,12 +1,9 @@
 <template>
-  <div class="col input-group">
-    <input type="number" name="price" v-model="data" step="0.01"  @blur="formatDollars()" class="form-control currency" required/>
+  <div role="group" class="form-group col currency">
+    <input type="number" name="value" v-model="data" step="0.01"  @blur="formatCurrency()" class="form-control" placeholder="-1,00" @input="onInput" />
     <div class="input-group-append">
-      <span class="input-group-text">zł</span>
+      <span class="input-group-text">PLN</span>
     </div>
-    <b-form-invalid-feedback v-for="error in errors" :key="error">
-      {{ error }}
-    </b-form-invalid-feedback>
   </div>
 </template>
 
@@ -20,15 +17,10 @@
       }
     },
     mounted () {
-      this.formatDollars()
+      this.formatCurrency()
     },
     methods: {
-      stripTheGarbage (e) {
-        if (e.keyCode < 48 && e.keyCode !== 46 || e.keyCode > 59) {
-          e.preventDefault()
-        }
-      },
-      formatDollars () {
+      formatCurrency () {
         if (this.data !== '') {
           var num = this.data
 
@@ -49,8 +41,13 @@
             num = num.toFixed(decimal)
           }
           this.data = num
-          this.$emit('change', this.data)
         }
+      },
+      onInput (event) {
+        this.$emit('input', this.data)
+      },
+      resetInput () {
+        this.data = ''
       }
     }
   }

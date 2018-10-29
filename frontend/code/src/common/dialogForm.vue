@@ -4,7 +4,7 @@
       <slot name="anhor"></slot>
     </b-btn>
 
-    <b-modal ref="modal" :title="title" hide-footer>
+    <b-modal ref="modal" :size="size" :title="title" hide-footer>
       <ccform ref="form" @submit="onSubmit" @cancel="$refs.modal.hide()" v-show="!isBusy">
         <slot name="content"></slot>
       </ccform>
@@ -25,6 +25,9 @@
       },
       fetchContent: {
         default: false
+      },
+      size: {
+        default: 'md'
       },
       saveCall: {}
     },
