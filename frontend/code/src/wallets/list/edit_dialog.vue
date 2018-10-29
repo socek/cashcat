@@ -1,16 +1,19 @@
 <template>
   <dialogform
     title="Edytuj portfel"
+
     :fetchContent="fetchContent"
-    :saveCall="saveCall"
-    @success="$emit('success')">
+    ref="form"
+    v-model="form"
+    @success="$emit('success')"
+    @submit="onSubmit">
 
       <template slot="anhor">
         <icon name="edit"></icon>
       </template>
 
       <template slot="content">
-        <text-input name="name" placeholder="Prywatny" label="Nazwa"></text-input>
+        <text-input v-model="form.name" placeholder="Prywatny" label="Nazwa"></text-input>
       </template>
   </dialogform>
 
@@ -22,8 +25,12 @@ import walletResource from '@/wallets/resource'
 
 export default {
   props: ['wallet_uid'],
+
   data () {
     return {
+      form: {
+        name: ''
+      },
       resource: walletResource(this)
     }
   },
@@ -31,8 +38,10 @@ export default {
     fetchContent () {
       return this.resource.get({wallet_uid: this.wallet_uid})
     },
-    saveCall (form) {
-      return this.resource.update({wallet_uid: this.wallet_uid}, form.fields)
+    onSubmit (form) {
+      walletResource(this).update({wallet_uid: this.wallet_uid}, form).then((response) => {
+        this.$refs.form.onSuccess()
+      }).catch(this.$refs.form.parseErrorResponse)
     }
   }
 }

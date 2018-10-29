@@ -1,7 +1,8 @@
 <template>
   <dialogform
-    ref="form"
     title="Nowy portfel"
+
+    ref="form"
     v-model="form"
     @success="$emit('success')"
     @submit="onSubmit">

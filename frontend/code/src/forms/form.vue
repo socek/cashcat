@@ -121,6 +121,25 @@
         form = this.resetErrors(form)
         form = this.setErrors(form, response.body)
         this.$emit('input', form)
+      },
+
+      setFormDefaults (form, defaults) {
+        for (let index in defaults) {
+          let value = defaults[index]
+          if (typeof (value) === 'object') {
+            form[index] = this.setFormDefaults(form[index], value)
+          } else if (form[index] === undefined) {
+            // Ignore missing fields
+          } else {
+            form[index].default = value
+          }
+        }
+        return form
+      },
+      setDefaults (defaults) {
+        let form = this.setFormDefaults(this.value, defaults)
+        form = this.resetFields(form)
+        this.$emit('input', form)
       }
     }
   }

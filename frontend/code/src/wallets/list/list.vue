@@ -8,10 +8,10 @@
     </div>
     <b-table ref="table" :busy.sync="isBusy" show-empty striped bordered hover :items="provider" :fields="fields">
     <template slot="name" slot-scope="data">
-      <router-link class="nav-link active" :to="{ name: 'BillList', params: {wallet_uid: data.item.uid} }">{{ data.item.name }}</router-link>
+      <router-link class="nav-link active" :to="{ name: 'BillList', params: {wallet_uid: data.item.uid} }"><icon name="wallet" /> {{ data.item.name }}</router-link>
     </template>
       <template slot="actions" slot-scope="data">
-
+        <editDialog :wallet_uid="data.item.uid" @success="onSuccess"></editDialog>
       </template>
       <template slot="empty">
         Brak elementów do wyświetlenia.
@@ -23,8 +23,7 @@
 <script>
 import walletResource from '@/wallets/resource'
 import newDialog from '@/wallets/list/new_dialog'
-// import editDialog from '@/wallets/list/edit_dialog'
-// <editDialog :wallet_uid="data.item.uid" @success="onSuccess"></editDialog>
+import editDialog from '@/wallets/list/edit_dialog'
 
 export default {
   data () {
@@ -50,8 +49,8 @@ export default {
     }
   },
   components: {
+    editDialog,
     newDialog
-    // editDialog,
   }
 }
 </script>
