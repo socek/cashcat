@@ -14,7 +14,13 @@
     <template slot="content">
       <text-input v-model="form.place" label="Miejsce" placeholder="nazwa sklepu"></text-input>
       <date-input v-model="form.billed_at" label="Kiedy"></date-input>
-      <item-row v-for="(item, index) in form.items" v-model="form.items[index]" :key="item._index"  @input="onInput"></item-row>
+      <item-row
+        v-for="(item, index) in form.items"
+        v-model="form.items[index]"
+        :index="item._index"
+        :key="item._index"
+        @input="onInput"
+        @removeItem="removeItem"></item-row>
 
       <div class="form-row">
         <div role="group" class="form-group col-md-8">
@@ -98,13 +104,19 @@ export default {
         value: ''
       })
       this.form.items.push(field)
-      // this.form = Object.assign({}, this.form)
     },
     onInput () {
       let items = this.form.items
       let value = items[items.length - 1].name.value
       if (value) {
         this.createEmptyItem()
+      }
+      this.countSum()
+    },
+    removeItem (index) {
+      this.form.items.splice(index, 1)
+      for (let loop = index; loop < this.form.items.length; loop++) {
+        this.form.items[loop]._index = loop
       }
       this.countSum()
     }

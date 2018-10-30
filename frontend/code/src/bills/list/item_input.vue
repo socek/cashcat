@@ -16,6 +16,11 @@
       </div>
       <div class="invalid-feedback" style="display: block;" v-for="message in value.value.errors">{{ message }}</div>
     </div>
+    <div role="group" class="form-group col currency">
+      <b-btn v-if="index !== 0" size="sm" variant="outline-danger" @click="$emit('removeItem', index)" title="Usuń produkt">
+        <icon name="plus-circle" />
+      </b-btn>
+    </div>
   </div>
 </template>
 
@@ -24,6 +29,12 @@ import base from '@/forms/base'
 
 export default {
   extends: base,
+  props: {
+    index: {
+      type: Number,
+      required: true
+    }
+  },
   methods: {
     formatCurrency () {
       let form = this.value
