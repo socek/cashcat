@@ -2,16 +2,20 @@
   <dialogform
     title="Nowy rachunek"
     size="lg"
-    :saveCall="saveCall"
-    @success="$emit('success')">
+
+    ref="form"
+    v-model="form"
+    @success="$emit('success')"
+    @submit="onSubmit">
 
     <template slot="anhor">
       <icon name="plus-circle" />
     </template>
     <template slot="content">
-      <text-input name="place" label="Miejsce" placeholder="nazwa sklepu"></text-input>
-      <date-input name="billed_at" label="Kiedy"></date-input>
-      <item-row ref="items" name="items" :default="items"  @input="onInput"></item-row>
+      <text-input v-model="form.place" label="Miejsce" placeholder="nazwa sklepu"></text-input>
+      <date-input v-model="form.billed_at" label="Kiedy"></date-input>
+      <item-row v-for="(item, index) in form.items" v-model="form.items[index]" :key="item._index"  @input="onInput"></item-row>
+
       <div class="form-row">
         <div role="group" class="form-group col-md-8">
           &nbsp;
@@ -35,27 +39,33 @@ import itemRow from '@/bills/list/item_input'
 export default {
   data () {
     return {
-      items: [{name: '', quantity: '', value: ''}],
+      form: {
+        place: '',
+        billed_at: '', // paste here current date
+        items: [{
+          _index: 0,
+          name: '',
+          quantity: '',
+          value: ''
+        }]
+      },
       resource: billResource(this),
       sum: 0
     }
   },
   methods: {
-    saveCall (form) {
-      let fields = Object.assign({}, form.fields)
-      fields.items = []
-      for (let item of form.fields.items) {
-        if (item.name || item.quantity || item.value) {
-          fields.items.push(item)
-        }
-      }
-      return this.resource.create({}, fields)
+    onSubmit (form) {
+      this.resource.create({}, form).then((response) => {
+        this.$refs.form.onSuccess()
+      }).catch(this.$refs.form.parseErrorResponse)
     },
-    countSum (form) {
+    countSum () {
       this.sum = 0
-      for (let item of form.fields.items) {
-        if (item.name) {
-          this.sum += item.quantity * item.value
+      for (let item of this.form.items) {
+        let price = item.value.value
+        let quantity = item.quantity.value
+        if (price && quantity) {
+          this.sum += quantity * price
         }
       }
       this.sum = this.formatCurrency(this.sum)
@@ -79,13 +89,24 @@ export default {
       }
       return num
     },
-    onInput (form) {
-      let items = form.fields.items
-      let value = items[items.length - 1].name
+    createEmptyItem () {
+      let len = this.form.items.length
+      let field = this.$refs.form.$refs.form.toFormObject({
+        _index: len,
+        name: '',
+        quantity: '',
+        value: ''
+      })
+      this.form.items.push(field)
+      // this.form = Object.assign({}, this.form)
+    },
+    onInput () {
+      let items = this.form.items
+      let value = items[items.length - 1].name.value
       if (value) {
-        this.$refs.items.appendChild()
+        this.createEmptyItem()
       }
-      this.countSum(form)
+      this.countSum()
     }
   },
   components: {

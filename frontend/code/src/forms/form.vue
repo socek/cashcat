@@ -44,7 +44,7 @@
         obj._schema = []
         for (let index in obj) {
           let value = obj[index]
-          if (index === '_schema') {
+          if (index.startsWith('_')) {
             // do nothing. _schema is a special field
           } else if (typeof (value) === 'object') {
             obj[index] = this.toFormObject(value)
@@ -68,14 +68,35 @@
       resetForm () {
         this.$emit('input', this.resetFields(this.value))
       },
+      toFieldsList (form) {
+        let fields = []
+        for (let item of form) {
+          fields.push(this.toFields(item))
+        }
+        let lastItemIndex = fields.length - 1
+        let lastItem = fields[lastItemIndex]
+        let isEmpty = true
+        for (let item in lastItem) {
+          if (lastItem[item]) {
+            isEmpty = false
+            break
+          }
+        }
+        if (isEmpty) {
+          fields.pop(lastItemIndex)
+        }
+        return fields
+      },
       toFields (form) {
         let fields = {}
         for (let index in form) {
           let value = form[index]
-          if (index === '_schema') {
+          if (index.startsWith('_')) {
             // do nothing
           } else if (value.value !== undefined) {
             fields[index] = value.value
+          } else if (Array.isArray(value)) {
+            fields[index] = this.toFieldsList(value)
           } else {
             fields[index] = this.toFields(value)
           }
@@ -106,7 +127,7 @@
 
       setErrors (form, errors) {
         for (let index in errors) {
-          if (index === '_schema') {
+          if (index.startsWith('_')) {
             form._schema = errors[index]
           } else if (typeof (errors[index][0]) === 'string') {
             form[index].errors = errors[index]

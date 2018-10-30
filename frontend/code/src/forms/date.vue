@@ -1,15 +1,15 @@
 <template>
   <div role="group" class="b-form-group form-group">
-    <label :for="id" class="col-form-label pt-0">{{ label }}:</label>
-    <date-picker :id="id" v-model="form.fields[name]" class="form-control" @input="onInput" :class="{'is-invalid': state == 'error'}" :config="options"></date-picker>
-    <div class="invalid-feedback" style="display: block;" v-for="message in form.errors[name]">{{ message }}</div>
+    <label class="col-form-label pt-0">{{ label }}:</label>
+    <date-picker v-model="value.value" class="form-control" :class="{'is-invalid': state == 'error'}" :config="options"></date-picker>
+    <div class="invalid-feedback" style="display: block;" v-for="message in value.errors">{{ message }}</div>
   </div>
 </template>
 
 <script>
   import base from '@/forms/base'
   export default {
-    mixins: [base],
+    extends: base,
     data () {
       return {
         options: {

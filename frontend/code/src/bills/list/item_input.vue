@@ -1,45 +1,57 @@
 <template>
-  <div>
-    <div class="form-row" v-for="item in form.fields[name]">
-      <div role="group" class="form-group col-md-6">
-        <input type="text" v-model="item.name" class="form-control" @input="onInput" placeholder="nazwa produktu">
+  <div class="form-row">
+    <div role="group" class="form-group col-md-6">
+      <input type="text" v-model="value.name.value" class="form-control" placeholder="Nazwa produktu" :class="{'is-invalid': state == 'error'}"  @input="onInput">
+      <div class="invalid-feedback" style="display: block;" v-for="message in value.name.errors">{{ message }}</div>
+    </div>
+    <div role="group" class="form-group col-md-2">
+      <input type="text" v-model="value.quantity.value" class="form-control" placeholder="1.00" :class="{'is-invalid': state == 'error'}"  @input="onInput">
+      <div class="invalid-feedback" style="display: block;" v-for="message in value.quantity.errors">{{ message }}</div>
+    </div>
+
+    <div role="group" class="form-group col currency">
+      <input type="number" v-model="value.value.value" step="0.01"  @blur="formatCurrency()" class="form-control" placeholder="-1,00" @input="onInput" />
+      <div class="input-group-append">
+        <span class="input-group-text">PLN</span>
       </div>
-      <div role="group" class="form-group col-md-2">
-        <input type="text" v-model="item.quantity" class="form-control" @input="onInput" placeholder="1.00">
-      </div>
-      <currency v-model="item.value" @input="onInput"></currency>
+      <div class="invalid-feedback" style="display: block;" v-for="message in value.value.errors">{{ message }}</div>
     </div>
   </div>
 </template>
 
 <script>
-import currency from '@/bills/list/currency'
 import base from '@/forms/base'
 
 export default {
   extends: base,
   methods: {
-    resetInput () {
-      this.form.fields[this.name] = []
-      for (let item of this.form.defaults[this.name]) {
-        this.form.fields[this.name].push(Object.assign({}, item))
+    formatCurrency () {
+      let form = this.value
+      let currency = form.value.value
+      if (currency !== '') {
+        currency = Number(currency)
+
+        var countDecimals = function (value) {
+          if (Math.floor(value) === value) return 0
+          return value.toString().split('.')[1].length || 0
+        }
+
+        var decimal = countDecimals(currency)
+
+        if (decimal < 2) {
+          currency = currency.toFixed(2)
+        }
+
+        if (decimal > 2) {
+          currency = currency.toFixed(decimal)
+        }
+        form.value.value = currency
+        this.$emit('input', form)
       }
-      this.form.errors[this.name] = []
-      this.form = Object.assign({}, this.form)
-      this.state = 'normal'
-      this.onInput()
     },
-    appendChild () {
-      this.form.fields.items.push({
-        name: '',
-        quantity: '',
-        value: ''
-      })
-      this.form = Object.assign({}, this.form)
+    onInput () {
+      this.$emit('input', this.value)
     }
-  },
-  components: {
-    currency
   }
 }
 </script>

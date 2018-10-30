@@ -24,12 +24,6 @@ export default {
     }
   },
   methods: {
-    check () {
-      console.log(this.form)
-    },
-    reset () {
-      this.$refs.form.resetForm()
-    },
     onSubmit (form) {
       this.resource.login({}, form).then((response) => {
         this.$store.commit('auth/logIn', response.body.jwt)
