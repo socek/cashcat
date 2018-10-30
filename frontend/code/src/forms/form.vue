@@ -66,7 +66,11 @@
         return field
       },
       resetForm () {
-        this.$emit('input', this.resetFields(this.value))
+        let form = this.value
+        form = this.resetErrors(form)
+        form = this.resetFields(form)
+        this.$emit('input', form)
+        this.$emit('afterReset')
       },
       toFieldsList (form) {
         let fields = []

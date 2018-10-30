@@ -6,7 +6,8 @@
     ref="form"
     v-model="form"
     @success="$emit('success')"
-    @submit="onSubmit">
+    @submit="onSubmit"
+    @afterReset="onAfterReset">
 
     <template slot="anhor">
       <icon name="plus-circle" />
@@ -79,28 +80,37 @@ export default {
     formatCurrency (value) {
       return Number(value).toFixed(2)
     },
-    createEmptyItem () {
-      let len = this.form.items.length
+    ensureEmptyItemAtEnd () {
+      let items = this.form.items
+      let len = items.length
+      if (items.length === 0 || items[len - 1].name.value) {
+        let field = this.$refs.form.$refs.form.toFormObject({
+          _index: len,
+          _isLast: true,
+          name: '',
+          quantity: '',
+          value: ''
+        })
+        this.form.items[len - 1]._isLast = false
+        this.form.items.push(field)
+      }
+    },
+    onAfterReset () {
       let field = this.$refs.form.$refs.form.toFormObject({
-        _index: len,
+        _index: 0,
         _isLast: true,
         name: '',
         quantity: '',
         value: ''
       })
-      this.form.items[len - 1]._isLast = false
-      this.form.items.push(field)
+      this.form.items = [field]
     },
     onInput () {
-      let items = this.form.items
-      let value = items[items.length - 1].name.value
-      if (value) {
-        this.createEmptyItem()
-      }
+      this.ensureEmptyItemAtEnd()
       this.countSum()
     },
     removeItem (index) {
-      this.form.items.splice(index, 1)
+      console.log('ri', this.form.items.splice(index, 1))
       for (let loop = index; loop < this.form.items.length; loop++) {
         this.form.items[loop]._index = loop
       }

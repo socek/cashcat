@@ -5,7 +5,7 @@
     </b-btn>
 
     <b-modal ref="modal" :size="size" :title="title" hide-footer>
-      <ccform ref="form" v-model="value" @submit="onSubmit" @cancel="$refs.modal.hide()" v-show="!isBusy">
+      <ccform ref="form" v-model="value" @submit="onSubmit" @cancel="$refs.modal.hide()" v-show="!isBusy" @afterReset="$emit('afterReset')">
         <slot name="content"></slot>
       </ccform>
       <div v-show="isBusy" class="modal-spiner">
