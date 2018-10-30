@@ -5,7 +5,7 @@
       <div class="invalid-feedback" style="display: block;" v-for="message in value.name.errors">{{ message }}</div>
     </div>
     <div role="group" class="form-group col-md-2">
-      <input type="text" v-model="value.quantity.value" class="form-control" placeholder="1.00" :class="{'is-invalid': state == 'error'}"  @input="onInput">
+      <input type="number" step="0.00001" v-model="value.quantity.value" class="form-control" placeholder="1.00" :class="{'is-invalid': state == 'error'}"  @input="onInput">
       <div class="invalid-feedback" style="display: block;" v-for="message in value.quantity.errors">{{ message }}</div>
     </div>
 
@@ -17,7 +17,7 @@
       <div class="invalid-feedback" style="display: block;" v-for="message in value.value.errors">{{ message }}</div>
     </div>
     <div role="group" class="form-group col currency">
-      <b-btn v-if="index !== 0" size="sm" variant="outline-danger" @click="$emit('removeItem', index)" title="Usuń produkt">
+      <b-btn v-if="isDeleteVisible()" size="sm" variant="outline-danger" @click="$emit('removeItem', value._index)" title="Usuń produkt">
         <icon name="plus-circle" />
       </b-btn>
     </div>
@@ -40,28 +40,17 @@ export default {
       let form = this.value
       let currency = form.value.value
       if (currency !== '') {
-        currency = Number(currency)
-
-        var countDecimals = function (value) {
-          if (Math.floor(value) === value) return 0
-          return value.toString().split('.')[1].length || 0
-        }
-
-        var decimal = countDecimals(currency)
-
-        if (decimal < 2) {
-          currency = currency.toFixed(2)
-        }
-
-        if (decimal > 2) {
-          currency = currency.toFixed(decimal)
-        }
-        form.value.value = currency
+        form.value.value = Number(currency).toFixed(2)
         this.$emit('input', form)
       }
     },
     onInput () {
       this.$emit('input', this.value)
+    },
+    isDeleteVisible () {
+      let index = this.value._index
+      let isLast = this.value._isLast
+      return index !== 0 && !isLast
     }
   }
 }

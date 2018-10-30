@@ -77,32 +77,18 @@ export default {
       this.sum = this.formatCurrency(this.sum)
     },
     formatCurrency (value) {
-      let num = Number(value)
-
-      var countDecimals = function (value) {
-        if (Math.floor(value) === value) return 0
-        return value.toString().split('.')[1].length || 0
-      }
-
-      var decimal = countDecimals(num)
-
-      if (decimal < 2) {
-        num = num.toFixed(2)
-      }
-
-      if (decimal > 2) {
-        num = num.toFixed(decimal)
-      }
-      return num
+      return Number(value).toFixed(2)
     },
     createEmptyItem () {
       let len = this.form.items.length
       let field = this.$refs.form.$refs.form.toFormObject({
         _index: len,
+        _isLast: true,
         name: '',
         quantity: '',
         value: ''
       })
+      this.form.items[len - 1]._isLast = false
       this.form.items.push(field)
     },
     onInput () {
