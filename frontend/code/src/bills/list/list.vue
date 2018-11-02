@@ -7,6 +7,9 @@
       </div>
     </div>
     <b-table ref="table" :busy.sync="isBusy" show-empty striped bordered hover :items="provider" :fields="fields">
+      <template slot="actions" slot-scope="data">
+        <edit-dialog :bill_uid="data.item.uid" @success="onSuccess"></edit-dialog>
+      </template>
       <template slot="empty">
         Brak elementów do wyświetlenia.
       </template>
@@ -17,12 +20,16 @@
 <script>
 import billResource from '@/bills/resource'
 import newDialog from '@/bills/list/new_dialog'
+import editDialog from '@/bills/list/edit_dialog'
 
 export default {
   data () {
     return {
       isBusy: false,
-      fields: [ {key: 'place', label: 'Miejsce'}, {key: 'billed_at', label: 'Dzień'} ],
+      fields: [
+        {key: 'place', label: 'Miejsce'},
+        {key: 'billed_at', label: 'Dzień'},
+        {key: 'actions', label: 'Akcje'} ],
       items: [],
       resource: billResource(this)
     }
@@ -38,7 +45,8 @@ export default {
     }
   },
   components: {
-    newDialog
+    newDialog,
+    editDialog
   }
 }
 </script>

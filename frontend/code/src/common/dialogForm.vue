@@ -48,6 +48,7 @@
           this.fetchContent().then((response) => {
             this.$refs.form.setDefaults(response.body)
             this.isBusy = false
+            this.$emit('afterFetchContent')
           })
         } else {
           this.$refs.form.resetForm()

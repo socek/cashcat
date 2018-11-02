@@ -151,7 +151,9 @@
       setFormDefaults (form, defaults) {
         for (let index in defaults) {
           let value = defaults[index]
-          if (typeof (value) === 'object') {
+          if (Array.isArray(value)) {
+            form[index] = this.setFormDefaultsForList(value)
+          } else if (typeof (value) === 'object') {
             form[index] = this.setFormDefaults(form[index], value)
           } else if (form[index] === undefined) {
             // Ignore missing fields
@@ -165,6 +167,24 @@
         let form = this.setFormDefaults(this.value, defaults)
         form = this.resetFields(form)
         this.$emit('input', form)
+      },
+      setFormDefaultsForList (defaults) {
+        let form = []
+        for (let index in defaults) {
+          let value = defaults[index]
+          let item = {
+            _index: form.length
+          }
+          for (let key in value) {
+            item[key] = {
+              value: value[key],
+              errors: [],
+              default: value[key]
+            }
+          }
+          form.push(item)
+        }
+        return form
       }
     }
   }

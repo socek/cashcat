@@ -110,7 +110,6 @@ export default {
       this.countSum()
     },
     removeItem (index) {
-      console.log('ri', this.form.items.splice(index, 1))
       for (let loop = index; loop < this.form.items.length; loop++) {
         this.form.items[loop]._index = loop
       }
