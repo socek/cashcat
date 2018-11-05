@@ -109,7 +109,9 @@ export default {
       this.ensureEmptyItemAtEnd()
       this.countSum()
     },
-    removeItem (index) {
+    removeItem (item) {
+      let index = item._index
+      this.form.items.splice(index, 1)
       for (let loop = index; loop < this.form.items.length; loop++) {
         this.form.items[loop]._index = loop
       }

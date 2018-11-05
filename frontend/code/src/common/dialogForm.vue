@@ -48,11 +48,14 @@
           this.fetchContent().then((response) => {
             this.$refs.form.setDefaults(response.body)
             this.isBusy = false
-            this.$emit('afterFetchContent')
+            this.$emit('afterFetchContent', response.body)
           })
         } else {
           this.$refs.form.resetForm()
         }
+      },
+      hideModal () {
+        this.$refs.modal.hide()
       },
       onSubmit (fields) {
         this.$emit('submit', fields)

@@ -17,7 +17,7 @@
       <div class="invalid-feedback" style="display: block;" v-for="message in value.value.errors">{{ message }}</div>
     </div>
     <div role="group" class="form-group col currency">
-      <b-btn v-if="isDeleteVisible()" size="sm" variant="outline-danger" @click="$emit('removeItem', value._index)" title="Usuń produkt">
+      <b-btn v-if="isDeleteVisible()" size="sm" variant="outline-danger" @click="$emit('removeItem', value)" title="Usuń produkt">
         <icon name="plus-circle" />
       </b-btn>
     </div>
@@ -48,9 +48,8 @@ export default {
       this.$emit('input', this.value)
     },
     isDeleteVisible () {
-      let index = this.value._index
       let isLast = this.value._isLast
-      return index !== 0 && !isLast
+      return !isLast
     }
   }
 }
