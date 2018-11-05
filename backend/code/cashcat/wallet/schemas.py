@@ -15,8 +15,7 @@ class WalletSchema(ModelSchema):
 
     @pre_dump
     def make_dict(self, obj):
-        return dict(
-            uid=obj.uid, name=obj.name, type=obj.type, owner_uid=obj.owner_uid)
+        return dict(uid=obj.uid, name=obj.name, type=obj.type, owner_uid=obj.owner_uid)
 
     @post_load
     def make_model(self, data):

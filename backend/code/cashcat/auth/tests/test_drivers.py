@@ -5,7 +5,6 @@ from cashcat.application.testing import IntegrationFixture
 
 
 class TestUserDriver(IntegrationFixture):
-
     def test_find_by_email(self, user_query, user):
         assert user_query.find_by_email(self.user_data["email"]).uid == user.uid
 
@@ -37,7 +36,7 @@ class TestUserDriver(IntegrationFixture):
         .get_by_uid should raise NoResultFound when uuid is malformed
         """
         with raises(NoResultFound):
-            user_query.get_by_uid('x')
+            user_query.get_by_uid("x")
 
     def test_delete(self, user_command, user_query, user):
         user_command.delete(user.uid)

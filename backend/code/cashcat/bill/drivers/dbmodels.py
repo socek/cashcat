@@ -62,4 +62,3 @@ class BillItemData(SqlDataModel):
         self.quantity = model.quantity
         self.value = model.value
         self.bill_uid = model.bill_uid
-

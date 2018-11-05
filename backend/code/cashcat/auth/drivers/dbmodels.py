@@ -23,7 +23,8 @@ class UserData(SqlDataModel):
             name=self.name,
             email=self.email,
             is_admin=self.is_admin,
-            password=self.password)
+            password=self.password,
+        )
 
     def from_model(self, model):
         self.uid = model.uid

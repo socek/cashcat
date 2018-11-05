@@ -32,10 +32,7 @@ class Query(BaseQuery):
             yield obj.to_model()
 
     def _list_active(self):
-        return (
-            self._query()
-            .filter(self.model.is_active.is_(True))
-        )
+        return self._query().filter(self.model.is_active.is_(True))
 
     def _get_by_uid(self, uid):
         return self._list_active().filter(self.model.uid == uid)

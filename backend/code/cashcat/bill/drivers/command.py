@@ -40,7 +40,7 @@ class BillCommand(Command):
         self, uid, bill=None, create_items=None, remove_items=None, items_update=None
     ):
         if not (bill or create_items or remove_items or items_update):
-            raise RuntimeError('Do not invoke command when nothing to do!')
+            raise RuntimeError("Do not invoke command when nothing to do!")
         if bill:
             self._update_by_uid(uid, bill)
         if create_items:

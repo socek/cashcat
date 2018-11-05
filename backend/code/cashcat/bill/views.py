@@ -64,10 +64,7 @@ class BillView(BaseView):
         except PatchError as error:
             raise HTTPBadRequest(json={"message": error.message, "patch": error.patch})
 
-        self.bill_command().patch_by_uid(
-            self.request.matchdict["bill_uid"],
-            *result,
-        )
+        self.bill_command().patch_by_uid(self.request.matchdict["bill_uid"], *result)
 
     @cache_per_request("bill")
     def _get_bill(self):
@@ -75,7 +72,7 @@ class BillView(BaseView):
             return self.bill_query().get_active_by_uid(
                 self.request.matchdict["bill_uid"],
                 self.request.matchdict["wallet_uid"],
-                True
+                True,
             )
         except NoResultFound:
             raise HTTPNotFound()

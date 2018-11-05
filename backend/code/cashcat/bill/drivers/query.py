@@ -39,6 +39,5 @@ class BillQuery(Query):
     def _get_active_items(self, bill_uid):
         return self.database.query(self.item_data_model).filter(
             self.item_data_model.bill_uid == bill_uid,
-            self.item_data_model.is_active.is_(True)
+            self.item_data_model.is_active.is_(True),
         )
-
