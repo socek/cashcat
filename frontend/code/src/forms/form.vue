@@ -45,7 +45,7 @@
         for (let index in obj) {
           let value = obj[index]
           if (index.startsWith('_')) {
-            // do nothing. _schema is a special field
+            // do nothing. "_" prefixed names are special fields
           } else if (typeof (value) === 'object') {
             obj[index] = this.toFormObject(value)
           } else {
@@ -142,10 +142,14 @@
         return form
       },
       parseErrorResponse (response) {
-        let form = this.value
-        form = this.resetErrors(form)
-        form = this.setErrors(form, response.body)
-        this.$emit('input', form)
+        if (response.status === 400) {
+          let form = this.value
+          form = this.resetErrors(form)
+          form = this.setErrors(form, response.body)
+          this.$emit('input', form)
+        } else {
+          console.log('something bad has happened', response)
+        }
       },
 
       setFormDefaults (form, defaults) {

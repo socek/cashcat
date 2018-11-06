@@ -1,74 +1,54 @@
-from collections import defaultdict
-
-from cashcat.bill.models import BillItem
-
-
-class PatchError(Exception):
-    def __init__(self, patch, message):
-        self.message = message
-        self.patch = patch
-
-
 class BillPatcher(object):
-    def __init__(self, patches):
-        self.patches = patches
-        self.bill_update = {}
-        self.items_update = defaultdict(lambda: {})
-        self.create_items = []
-        self.remove_items = []
+    _bill_keys = ["place", "billed_at"]
+    _item_keys = ["name", "quantity", "value"]
+
+    def __init__(self, old_object, new_object):
+        self.old_object = old_object
+        self.new_object = new_object
+        self.new_object.billed_at = self.new_object.billed_at.isoformat()
 
     def make(self):
-        for patch in self.patches:
-            if patch["op"] == "replace":
-                self._replace(patch)
-            elif patch["op"] == "add":
-                self._create_item(patch)
-            elif patch["op"] == "remove":
-                self._remove_item(patch)
-            else:
-                self._parse_error(
-                    patch, "This json patch implementation does not support operant"
-                )
         return (
-            self.bill_update,
-            self.create_items,
-            self.remove_items,
-            dict(self.items_update),
+            self._create_bill_diff(),
+            self._create_new_items_list(),
+            self._create_removed_items_list(),
+            self._create_items_diff(),
         )
 
-    def _replace(self, patch):
-        key = patch["path"].split("/", 1)[1]
-        if key in ["place", "billed_at"]:
-            self._replace_bill(key, patch)
-        elif key.startswith("items/"):
-            self._replace_item(patch)
-        else:
-            self._parse_error(
-                patch, "Only allow to replace: /place, /billed_at or /items/{uid}/{key}"
-            )
+    def _create_bill_diff(self):
+        diff = {}
+        for key in self._bill_keys:
+            old_value = getattr(self.old_object, key)
+            new_value = getattr(self.new_object, key)
+            if old_value != new_value:
+                diff[key] = new_value
+        return diff
 
-    def _replace_bill(self, key, patch):
-        self.bill_update[key] = patch["value"]
+    def _create_new_items_list(self):
+        return [item for item in self.new_object.items if not item.uid]
 
-    def _replace_item(self, patch):
-        try:
-            _, _, uid, key = patch["path"].split("/")
-        except ValueError:
-            self._parse_error(
-                patch, "Only allow to replace: /place, /billed_at or /items/{uid}/{key}"
-            )
-        if key in ["name", "quantity", "value"]:
-            self.items_update[uid][key] = patch["value"]
-        else:
-            self._parse_error(
-                patch, "Only allow to replace: /place, /billed_at or /items/{uid}/{key}"
-            )
+    def _create_removed_items_list(self):
+        old_uids = [item.uid for item in self.old_object.items if item.uid]
+        new_uids = [item.uid for item in self.new_object.items if item.uid]
+        return [uid for uid in old_uids if uid not in new_uids]
 
-    def _create_item(self, patch):
-        return self.create_items.append(BillItem(None, **patch["value"]))
+    def _create_items_diff(self):
+        diff = {}
+        new_items = {item.uid: item for item in self.new_object.items if item.uid}
+        for old_item in self.old_object.items:
+            new_item = new_items.get(old_item.uid)
+            if not new_item:
+                continue
+            item_diff = self._create_bill_item_diff(old_item, new_item)
+            if item_diff:
+                diff[old_item.uid] = item_diff
+        return diff
 
-    def _remove_item(self, patch):
-        return self.remove_items.append(patch["value"])
-
-    def _parse_error(self, patch, message):
-        raise PatchError(patch, message)
+    def _create_bill_item_diff(self, old_item, new_item):
+        diff = {}
+        for key in self._item_keys:
+            old_value = getattr(old_item, key)
+            new_value = getattr(new_item, key)
+            if old_value != new_value:
+                diff[key] = new_value
+        return diff
