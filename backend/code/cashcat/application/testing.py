@@ -16,6 +16,8 @@ from cashcat.auth.drivers import UserQuery
 from cashcat.auth.models import User
 from cashcat.bill.drivers import BillCommand
 from cashcat.bill.drivers import BillQuery
+from cashcat.group.drivers import GroupCommand
+from cashcat.group.drivers import GroupQuery
 from cashcat.wallet.drivers import WalletCommand
 from cashcat.wallet.drivers import WalletQuery
 from cashcat.wallet.models import Wallet
@@ -100,6 +102,14 @@ class CashcatFixturesMixin(object):
     @fixture
     def bill_command(self, app):
         return BillCommand(app.dbsession)
+
+    @fixture
+    def group_query(self, app):
+        return GroupQuery(app.dbsession)
+
+    @fixture
+    def group_command(self, app):
+        return GroupCommand(app.dbsession)
 
     @fixture
     def user(self, user_command):
