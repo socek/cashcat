@@ -30,9 +30,9 @@ class Bill(Model):
         """
         Add item to a bill.
         """
-        self.items.append(
-            BillItem(uid, created_at, updated_at, name, quantity, value, self.uid)
-        )
+        item = BillItem(uid, created_at, updated_at, name, quantity, value, self.uid)
+        self.items.append(item)
+        return item
 
 
 class BillItem(Model):

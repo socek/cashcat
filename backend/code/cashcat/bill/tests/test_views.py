@@ -2,6 +2,7 @@ from copy import deepcopy
 from datetime import date
 from unittest.mock import MagicMock
 from unittest.mock import patch
+from unittest.mock import sentinel
 from uuid import uuid4
 
 from pyramid.httpexceptions import HTTPBadRequest
@@ -181,8 +182,19 @@ class TestBillView(Fixtures):
             yield mock
 
     @fixture
-    def mbill_item(self):
-        with patch("cashcat.bill.patcher.BillItem") as mock:
+    def mbill_patcher(self):
+        with patch("cashcat.bill.views.BillPatcher") as mock:
+            mock.return_value.make.return_value = [
+                sentinel.one,
+                sentinel.two,
+                sentinel.three,
+                sentinel.four,
+            ]
+            yield mock
+
+    @fixture
+    def mbill_schema(self):
+        with patch("cashcat.bill.views.BillSchema") as mock:
             yield mock
 
     def test_validate(self, view, mget_user, mget_wallet, mget_bill):
@@ -215,64 +227,37 @@ class TestBillView(Fixtures):
             ],
         }
 
-    def test_patch(self, view, mget_bill, mrequest, mcommand, mbill_item):
+    def test_patch_item(
+        self, view, mget_bill, mrequest, mcommand, mbill_patcher, mbill_schema
+    ):
         """
-        .patch should parse json patch (http://jsonpatch.com/)
-        """
-        bill_uid = str(uuid4())
-        wallet_uid = str(uuid4())
-        mrequest.json_body = [
-            {"op": "replace", "path": "/place", "value": "new_place"},
-            {
-                "op": "add",
-                "path": "/items",
-                "value": {"name": "coke", "quantity": 1.2, "value": 1.3},
-            },
-            {"op": "remove", "path": "/items", "value": "item_uid"},
-        ]
-        mrequest.matchdict = {"bill_uid": bill_uid, "wallet_uid": wallet_uid}
-
-        view.patch()
-
-        mcommand.patch_by_uid.assert_called_once_with(
-            bill_uid,
-            {"place": "new_place"},
-            [mbill_item.return_value],
-            ["item_uid"],
-            {},
-        )
-        mbill_item.assert_called_once_with(None, name="coke", quantity=1.2, value=1.3)
-
-    def test_patch_item(self, view, mget_bill, mrequest, mcommand):
-        """
-        .patch should parse json patch (http://jsonpatch.com/)
+        .patch should compare old and new object and make proper changes
         """
         bill_uid = str(uuid4())
         wallet_uid = str(uuid4())
         item_uid = str(uuid4())
-        mrequest.json_body = [
-            {
-                "op": "replace",
-                "path": "/items/{}/name".format(item_uid),
-                "value": "new_name",
-            },
-            {
-                "op": "replace",
-                "path": "/items/{}/quantity".format(item_uid),
-                "value": 1.1,
-            },
-            {"op": "replace", "path": "/items/{}/value".format(item_uid), "value": 1.2},
-        ]
+        mrequest.json_body = {
+            "uid": bill_uid,
+            "place": "place",
+            "billed_at": "2018-01-01",
+            "items": [
+                {"uid": item_uid, "name": "name", "quantity": "1.40", "value": "1.50"}
+            ],
+            "wallet_uid": wallet_uid,
+        }
         mrequest.matchdict = {"bill_uid": bill_uid, "wallet_uid": wallet_uid}
 
         view.patch()
 
         mcommand.patch_by_uid.assert_called_once_with(
             bill_uid,
-            {},
-            [],
-            [],
-            {item_uid: {"name": "new_name", "quantity": 1.1, "value": 1.2}},
+            mbill_patcher.return_value.make.return_value[0],
+            mbill_patcher.return_value.make.return_value[1],
+            mbill_patcher.return_value.make.return_value[2],
+            mbill_patcher.return_value.make.return_value[3],
+        )
+        mbill_patcher.assert_called_once_with(
+            mget_bill.return_value, mbill_schema.return_value.load.return_value
         )
 
     def test_patch_with_bad_operand(self, view, mrequest):
