@@ -22,7 +22,7 @@ class GroupsView(BaseView):
         Get list of groups.
         """
         wallet = self._get_wallet()
-        groups = self.group_query().list_for_wallet(wallet.uid)
+        groups = self.group_query().list_for_wallet(wallet)
         schema = GroupSchema(many=True)
         return schema.dump(groups)
 

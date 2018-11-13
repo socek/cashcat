@@ -5,7 +5,7 @@ import store from '@/store'
 
 import NotLoggedIn from '@/auth/not-logged-in'
 import WalletList from '@/wallets/list/list'
-import BillList from '@/bills/list/list'
+import WalletDashboard from '@/wallets/dashboard'
 
 Vue.use(Router)
 
@@ -46,8 +46,8 @@ let router = new Router({
     },
     {
       path: '/wallets/:wallet_uid',
-      name: 'BillList',
-      component: BillList,
+      name: 'WalletDashboard',
+      component: WalletDashboard,
       beforeEnter: requireAuth
     }
   ]
