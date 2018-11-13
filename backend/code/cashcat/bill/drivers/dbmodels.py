@@ -42,6 +42,7 @@ class BillItemData(SqlDataModel):
     quantity = Column(Float, nullable=False)
     value = Column(Float, nullable=False)
     bill_uid = Column(UUID(as_uuid=True), ForeignKey("bills.uid"), nullable=False)
+    group_uid = Column(UUID(as_uuid=True), ForeignKey("groups.uid"), nullable=False)
 
     def to_model(self):
         return BillItem(
@@ -52,6 +53,7 @@ class BillItemData(SqlDataModel):
             quantity=self.quantity,
             value=self.value,
             bill_uid=self.bill_uid,
+            group_uid=self.group_uid,
         )
 
     def from_model(self, model):
@@ -62,3 +64,4 @@ class BillItemData(SqlDataModel):
         self.quantity = model.quantity
         self.value = model.value
         self.bill_uid = model.bill_uid
+        self.group_uid = model.group_uid

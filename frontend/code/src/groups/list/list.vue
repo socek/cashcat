@@ -24,6 +24,7 @@ import editDialog from '@/groups/list/edit_dialog'
 
 export default {
   data () {
+    this.$store.dispatch('groups/fetchGroups')
     return {
       isBusy: false,
       fields: [
@@ -33,13 +34,13 @@ export default {
     }
   },
   methods: {
-    provider (ctx) {
-      return this.resource.list({}, this.fields).then((response) => {
-        return response.data
-      })
-    },
     onSuccess () {
-      this.$refs.table.refresh()
+      this.$store.dispatch('groups/fetchGroups')
+    }
+  },
+  computed: {
+    provider (ctx) {
+      return this.$store.state.groups.groups
     }
   },
   components: {

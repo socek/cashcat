@@ -53,7 +53,8 @@ export default {
           _index: 0,
           name: '',
           quantity: '',
-          value: ''
+          value: '',
+          group_uid: ''
         }]
       },
       resource: billResource(this),
@@ -89,7 +90,8 @@ export default {
           _isLast: true,
           name: '',
           quantity: '',
-          value: ''
+          value: '',
+          group_uid: ''
         })
         this.form.items[len - 1]._isLast = false
         this.form.items.push(field)
@@ -101,7 +103,8 @@ export default {
         _isLast: true,
         name: '',
         quantity: '',
-        value: ''
+        value: '',
+        group_uid: ''
       })
       this.form.items = [field]
     },

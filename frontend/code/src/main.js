@@ -38,11 +38,13 @@ import textInput from '@/forms/text'
 import ccform from '@/forms/form'
 import dialogform from '@/common/dialogForm'
 import dateInput from '@/forms/date'
+import dropdown from '@/forms/dropdown'
 Vue.component('text-input', textInput)
 Vue.component('ccform', ccform)
 Vue.component('password-input', passwordInput)
 Vue.component('dialogform', dialogform)
 Vue.component('date-input', dateInput)
+Vue.component('dropdown', dropdown)
 
 Vue.use(VueNativeSock, 'ws://' + window.location.hostname + '/wsapp', {
   connectManually: true

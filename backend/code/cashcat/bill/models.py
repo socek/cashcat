@@ -45,9 +45,11 @@ class BillItem(Model):
         quantity=None,
         value=None,
         bill_uid=None,
+        group_uid=None,
     ):
         super().__init__(uid, created_at, updated_at)
         self.name = name
         self.quantity = quantity
         self.value = value
         self.bill_uid = bill_uid
+        self.group_uid = group_uid

@@ -10,16 +10,15 @@
         default: false
       }
     },
-    data () {
-      return {
-        state: 'normal'
-      }
-    },
     methods: {
       resetInput () {
         let obj = this.value
         obj.value = obj.default
         this.$emit('input', obj)
+      },
+      inputClass () {
+        let errors = this.value.errors
+        return {'is-invalid': errors && errors.length > 0}
       }
     }
   }

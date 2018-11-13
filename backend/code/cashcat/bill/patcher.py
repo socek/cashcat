@@ -1,6 +1,6 @@
 class BillPatcher(object):
     _bill_keys = ["place", "billed_at"]
-    _item_keys = ["name", "quantity", "value"]
+    _item_keys = ["name", "quantity", "value", "group_uid"]
 
     def __init__(self, old_object, new_object):
         self.old_object = old_object
