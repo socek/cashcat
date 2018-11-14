@@ -31,6 +31,7 @@ export default {
   methods: {
     onSubmit (form) {
       return groupResource(this).create({}, form).then((response) => {
+        this.$store.dispatch('groups/fetchGroups')
         this.$refs.form.onSuccess()
       }).catch(this.$refs.form.parseErrorResponse)
     }

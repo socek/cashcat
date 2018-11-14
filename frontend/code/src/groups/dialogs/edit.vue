@@ -40,6 +40,7 @@ export default {
     },
     onSubmit (form) {
       groupResource(this).update({group_uid: this.group_uid}, form).then((response) => {
+        this.$store.dispatch('groups/fetchGroups')
         this.$refs.form.onSuccess()
       }).catch(this.$refs.form.parseErrorResponse)
     }
