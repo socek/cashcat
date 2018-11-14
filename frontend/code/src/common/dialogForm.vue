@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="button-wrapper">
     <b-btn size="sm" :variant="variant" @click="showModal" v-b-tooltip.hover :title="title">
       <slot name="anhor"></slot>
     </b-btn>
@@ -80,5 +80,9 @@
   }
   .cancel {
     float: right;
+  }
+  .button-wrapper {
+    float: left;
+    padding-left: 5px;
   }
 </style>

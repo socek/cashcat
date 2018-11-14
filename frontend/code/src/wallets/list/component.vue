@@ -12,6 +12,7 @@
     </template>
       <template slot="actions" slot-scope="data">
         <editDialog :wallet_uid="data.item.uid"></editDialog>
+        <deleteDialog :wallet_uid="data.item.uid"></deleteDialog>
       </template>
       <template slot="empty">
         Brak elementów do wyświetlenia.
@@ -24,6 +25,7 @@
 import walletResource from '@/wallets/resource'
 import newDialog from '@/wallets/dialogs/new'
 import editDialog from '@/wallets/dialogs/edit'
+import deleteDialog from '@/wallets/dialogs/delete'
 
 export default {
   data () {
@@ -45,7 +47,8 @@ export default {
   },
   components: {
     editDialog,
-    newDialog
+    newDialog,
+    deleteDialog
   }
 }
 </script>

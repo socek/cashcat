@@ -70,3 +70,9 @@ class WalletView(BaseWalletView):
         self.wallet_command().update_by_uid(
             self.request.matchdict["wallet_uid"], {"name": wallet.name}
         )
+
+    def delete(self):
+        """
+        Soft delete wallet.
+        """
+        self.wallet_command().delete(self.request.matchdict["wallet_uid"])

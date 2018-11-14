@@ -158,3 +158,16 @@ class TestWalletView(Fixtures):
         mquery.get_active_by_uid.assert_called_once_with(
             uid, mget_user.return_value.uid
         )
+
+    def test_delete(self, view, mcommand, mget_user, mrequest):
+        """
+        .delete should remove wallet by using command
+        """
+        uid = str(uuid4())
+        mrequest.matchdict = {"wallet_uid": uid}
+
+        wallet = MagicMock()
+        wallet.uid = uid
+        wallet.owner_uid = uuid4()
+        assert view.delete() is None
+        mcommand.delete.assert_called_once_with(uid)

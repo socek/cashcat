@@ -3,13 +3,18 @@ import walletResource from '@/wallets/resource'
 export default {
   namespaced: true,
   state: {
-    wallets: []
+    wallets: [],
+    dict: {}
   },
   getters: {
   },
   mutations: {
     setWallets (state, wallets) {
       state.wallets = wallets
+      state.dict = {}
+      for (let wallet of wallets) {
+        state.dict[wallet.uid] = wallet
+      }
     }
   },
   actions: {
