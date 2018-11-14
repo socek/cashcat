@@ -34,7 +34,7 @@
 <script>
   import login from '@/auth/login'
   import register from '@/auth/register'
-  import walletsList from '@/wallets/navbar_list'
+  import walletsList from '@/wallets/list/sidebar'
 
   export default {
     computed: {
