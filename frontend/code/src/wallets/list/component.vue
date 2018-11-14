@@ -22,8 +22,8 @@
 
 <script>
 import walletResource from '@/wallets/resource'
-import newDialog from '@/wallets/list/new_dialog'
-import editDialog from '@/wallets/list/edit_dialog'
+import newDialog from '@/wallets/dialogs/new'
+import editDialog from '@/wallets/dialogs/edit'
 
 export default {
   data () {

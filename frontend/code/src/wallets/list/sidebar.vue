@@ -16,7 +16,7 @@
 </template>
 
 <script>
-  import newDialog from '@/wallets/list/new_dialog'
+  import newDialog from '@/wallets/dialogs/new'
 
   export default {
     methods: {
