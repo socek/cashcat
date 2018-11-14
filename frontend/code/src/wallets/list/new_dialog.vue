@@ -31,6 +31,7 @@ export default {
   methods: {
     onSubmit (form) {
       return walletResource(this).create({}, form).then((response) => {
+        this.$store.dispatch('wallets/fetchWallets')
         this.$refs.form.onSuccess()
       }).catch(this.$refs.form.parseErrorResponse)
     }

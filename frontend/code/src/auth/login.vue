@@ -1,16 +1,11 @@
 <template>
-  <div>
-    <b-nav-item v-if="isAuthenticated" v-on:click="logout">Logout</b-nav-item>
-  </div>
+  <li class="nav-item text-nowrap">
+    <a class="nav-link" @click="logout" href="#">Logout</a>
+  </li>
 </template>
 
 <script>
   export default {
-    computed: {
-      isAuthenticated () {
-        return this.$store.getters['auth/isAuthenticated']
-      }
-    },
     methods: {
       logout (event) {
         this.$store.commit('auth/logOut')

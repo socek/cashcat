@@ -1,7 +1,7 @@
 <template>
   <div>
-    <groups></groups>
-    <bills></bills>
+    <groups ref="groups"></groups>
+    <bills  ref="bills"></bills>
   </div>
 </template>
 
@@ -10,6 +10,15 @@
   import groups from '@/groups/list/list'
 
   export default {
+    watch: {
+      '$route': 'fetchData'
+    },
+    methods: {
+      fetchData () {
+        this.$refs.bills.fetchData()
+        this.$store.dispatch('groups/fetchGroups')
+      }
+    },
     components: {
       bills,
       groups

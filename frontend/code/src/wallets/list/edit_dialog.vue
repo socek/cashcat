@@ -40,6 +40,7 @@ export default {
     },
     onSubmit (form) {
       walletResource(this).update({wallet_uid: this.wallet_uid}, form).then((response) => {
+        this.$store.dispatch('wallets/fetchWallets')
         this.$refs.form.onSuccess()
       }).catch(this.$refs.form.parseErrorResponse)
     }

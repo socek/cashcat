@@ -1,52 +1,40 @@
 <template>
   <div>
     <b-navbar v-if="!isAuthenticated" toggleable="md" type="light" variant="light">
-      <b-navbar-brand href="#">Cashcat - Portfelowy Kot</b-navbar-brand>
+      <b-navbar-brand href="#">Cashcat</b-navbar-brand>
       <b-navbar-nav class="ml-auto">
         <register v-if="!isAuthenticated"></register>
       </b-navbar-nav>
     </b-navbar>
 
-    <b-navbar v-if="isAuthenticated" toggleable="md" type="dark" variant="dark">
-      <b-navbar-brand href="#">Cashcat - Portfelowy Kot</b-navbar-brand>
-      <b-collapse is-nav id="nav_collapse">
+   <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow" v-if="isAuthenticated">
+     <a class="navbar-brand col-sm-3 col-md-1 mr-0" href="#/">Cashcat</a>
+     <ul class="navbar-nav px-3">
+       <login></login>
+     </ul>
+   </nav>
 
-        <b-navbar-nav>
-        </b-navbar-nav>
-
-        <!-- Right aligned nav items -->
-        <b-navbar-nav class="ml-auto">
-          <login></login>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
-
-    <div class="container-fluid" id="content_container">
+    <div class="container-fluid">
       <router-view v-if="!isAuthenticated"></router-view>
-      <div class="row" v-if="isAuthenticated">
-        <nav class="col-md-1 d-none d-md-block bg-light sidebar">
-          <div class="sidebar-sticky">
-            <ul class="nav flex-column">
-              <li class="nav-item">
-                <router-link class="nav-link active" :to="{ name: 'WalletList' }">
-                  <icon name="wallet" /> Portfele
-                </router-link>
-              </li>
-            </ul>
-          </div>
-        </nav>
-        <main role="main" class="col-md-10 ml-sm-auto col-lg-11 pt-3 px-4">
-          <router-view></router-view>
-        </main>
-      </div>
-    </div>
+      <nav class="col-md-1 d-none d-md-block bg-light sidebar" v-if="isAuthenticated">
+        <div class="sidebar-sticky">
+          <ul class="nav flex-column">
+            <walletsList></walletsList>
+          </ul>
+        </div>
+      </nav>
 
+      <main id="main" role="main" class="col-md-10 ml-sm-auto col-lg-11">
+        <router-view></router-view>
+      </main>
+    </div>
   </div>
 </template>
 
 <script>
   import login from '@/auth/login'
   import register from '@/auth/register'
+  import walletsList from '@/wallets/navbar_list'
 
   export default {
     computed: {
@@ -60,7 +48,8 @@
     name: 'app',
     components: {
       login,
-      register
+      register,
+      walletsList
     }
   }
 </script>
