@@ -27,6 +27,7 @@ import editDialog from '@/wallets/list/edit_dialog'
 
 export default {
   data () {
+    this.$store.dispatch('wallets/fetchWallets')
     return {
       isBusy: false,
       fields: [ {key: 'name', label: 'Nazwa'}, {key: 'actions', label: 'Akcje'} ],
@@ -39,13 +40,13 @@ export default {
     }
   },
   methods: {
-    provider (ctx) {
-      return this.resource.list({}, this.fields).then((response) => {
-        return response.data
-      })
-    },
     onSuccess () {
-      this.$refs.table.refresh()
+      this.$store.dispatch('wallets/fetchWallets')
+    }
+  },
+  computed: {
+    provider (ctx) {
+      return this.$store.state.wallets.wallets
     }
   },
   components: {
