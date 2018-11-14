@@ -7,7 +7,7 @@
 
 <script>
   import bills from '@/bills/list/list'
-  import groups from '@/groups/list/list'
+  import groups from '@/groups/list/component'
 
   export default {
     watch: {
