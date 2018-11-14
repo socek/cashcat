@@ -18,6 +18,7 @@ from cashcat.bill.drivers import BillCommand
 from cashcat.bill.drivers import BillQuery
 from cashcat.group.drivers import GroupCommand
 from cashcat.group.drivers import GroupQuery
+from cashcat.group.models import Group
 from cashcat.wallet.drivers import WalletCommand
 from cashcat.wallet.drivers import WalletQuery
 from cashcat.wallet.models import Wallet
@@ -64,16 +65,16 @@ class CashcatFixturesMixin(object):
     }
 
     wallet_data = {"name": "Wallet1", "type": "private"}
-
     second_wallet_data = {"name": "Wallet2", "type": "private"}
 
     contest_user_data = {"name": "contest1 from user1"}
-
     contest_second_user_data = {"name": "contest1 from user2"}
 
     game_user_data = {"name": "first game"}
-
     game_second_user_data = {"name": "second game"}
+
+    group_data = {"name": "Group1"}
+    second_group_data = {"name": "Group2"}
 
     @fixture
     def dbsession(self, app):
@@ -150,6 +151,22 @@ class CashcatFixturesMixin(object):
         wallet_command.create(wallet)
         yield wallet
         wallet_command.force_delete(uid)
+
+    @fixture
+    def group(self, group_command, wallet):
+        uid = uuid4()
+        group = Group(uid, wallet_uid=wallet.uid, **self.group_data)
+        group_command.create(group)
+        yield group
+        group_command.force_delete(uid)
+
+    @fixture
+    def second_group(self, group_command, wallet):
+        uid = uuid4()
+        group = Group(uid, wallet_uid=wallet.uid, **self.second_group_data)
+        group_command.create(group)
+        yield group
+        group_command.force_delete(uid)
 
 
 class IntegrationFixture(CashcatFixturesMixin, BaseIntegrationFixture):

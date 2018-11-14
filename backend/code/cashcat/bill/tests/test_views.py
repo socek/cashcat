@@ -51,7 +51,13 @@ class Fixtures(ViewFixture):
         "billed_at": date(2018, 1, 2).isoformat(),
         "wallet_uid": str(uuid4()),
         "items": [
-            {"name": "coke", "uid": str(uuid4()), "quantity": 1.14, "value": 1.15}
+            {
+                "name": "coke",
+                "uid": str(uuid4()),
+                "quantity": 1.14,
+                "value": 1.15,
+                "group_uid": str(uuid4()),
+            }
         ],
     }
 
@@ -70,6 +76,7 @@ class TestBillsView(Fixtures):
         bill_item.quantity = 1.4
         bill_item.value = 1.5
         bill_item.bill_uid = uuid4()
+        bill_item.group_uid = uuid4()
         bill = MagicMock()
         bill.uid = uuid4()
         bill.wallet_uid = uuid4()
@@ -86,6 +93,7 @@ class TestBillsView(Fixtures):
                         "name": str(bill_item.name),
                         "quantity": "1.40",
                         "value": "1.50",
+                        "group_uid": str(bill_item.group_uid),
                     }
                 ],
                 "wallet_uid": str(bill.wallet_uid),
@@ -209,7 +217,7 @@ class TestBillView(Fixtures):
         .get should return serialized bill data
         """
         bill = Bill(uid=uuid4(), place="Lidl", billed_at=billed_at, wallet_uid=uuid4())
-        bill.add_item(uuid4(), name="coke", quantity=1.4, value=1.5)
+        bill.add_item(uuid4(), name="coke", quantity=1.4, value=1.5, group_uid=uuid4())
         mget_bill.return_value = bill
 
         assert view.get() == {
@@ -223,6 +231,7 @@ class TestBillView(Fixtures):
                     "name": "coke",
                     "quantity": "1.40",
                     "value": "1.50",
+                    "group_uid": str(bill.items[0].group_uid),
                 }
             ],
         }
@@ -236,12 +245,19 @@ class TestBillView(Fixtures):
         bill_uid = str(uuid4())
         wallet_uid = str(uuid4())
         item_uid = str(uuid4())
+        group_uid = str(uuid4())
         mrequest.json_body = {
             "uid": bill_uid,
             "place": "place",
             "billed_at": "2018-01-01",
             "items": [
-                {"uid": item_uid, "name": "name", "quantity": "1.40", "value": "1.50"}
+                {
+                    "uid": item_uid,
+                    "name": "name",
+                    "quantity": "1.40",
+                    "value": "1.50",
+                    "group_uid": group_uid,
+                }
             ],
             "wallet_uid": wallet_uid,
         }

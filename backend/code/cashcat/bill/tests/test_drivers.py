@@ -11,18 +11,22 @@ from cashcat.bill.models import Bill, BillItem
 
 class TestBillDriver(IntegrationFixture):
     @fixture
-    def bill(self, wallet, bill_command):
+    def bill(self, wallet, group, bill_command):
         uid = uuid4()
         bill = Bill(
             uid, place="lidl", billed_at=date(2018, 1, 1), wallet_uid=wallet.uid
         )
-        bill.add_item(uuid4(), name="cola", quantity=1, value=10)
-        bill.add_item(uuid4(), name="celery", quantity=1.25, value=10)
+        bill.add_item(uuid4(), name="cola", quantity=1, value=10, group_uid=group.uid)
+        bill.add_item(
+            uuid4(), name="celery", quantity=1.25, value=10, group_uid=group.uid
+        )
         bill_command.create(bill)
         yield bill
         bill_command.force_delete(uid)
 
-    def test_list_for_wallet(self, wallet, second_wallet, bill_query, bill_command):
+    def test_list_for_wallet(
+        self, wallet, second_wallet, bill_query, bill_command, group
+    ):
         """
         .list_for_wallet should return only list of bill for that wallet
         """
@@ -95,7 +99,7 @@ class TestBillDriver(IntegrationFixture):
         finally:
             bill_command.force_delete(uid)
 
-    def test_creating_with_items(self, wallet, bill_query, bill_command):
+    def test_creating_with_items(self, wallet, bill_query, bill_command, group):
         """
         query and command should operate on bill items.
         """
@@ -103,8 +107,10 @@ class TestBillDriver(IntegrationFixture):
         bill = Bill(
             uid, place="lidl", billed_at=date(2018, 1, 2), wallet_uid=wallet.uid
         )
-        bill.add_item(uuid4(), name="cola", quantity=1, value=10)
-        bill.add_item(uuid4(), name="celery", quantity=1.25, value=10)
+        bill.add_item(uuid4(), name="cola", quantity=1, value=10, group_uid=group.uid)
+        bill.add_item(
+            uuid4(), name="celery", quantity=1.25, value=10, group_uid=group.uid
+        )
         bill_command.create(bill)
 
         try:
@@ -126,12 +132,14 @@ class TestBillDriver(IntegrationFixture):
         with raises(RuntimeError):
             bill_command.patch_by_uid(uid)
 
-    def test_patch_by_uid(self, wallet, bill_query, bill_command, bill):
+    def test_patch_by_uid(self, wallet, bill_query, bill_command, bill, group):
         """
         .patch_by_uid should update bill and items.
         """
         bill_update = {"place": "new place", "billed_at": date(2018, 2, 1)}
-        create_items = [BillItem(None, name="sprite", quantity=2, value=3)]
+        create_items = [
+            BillItem(None, name="sprite", quantity=2, value=3, group_uid=group.uid)
+        ]
         remove_item_uid = bill.items[0].uid
         remove_items = [remove_item_uid]
         old_item_uid = bill.items[1].uid

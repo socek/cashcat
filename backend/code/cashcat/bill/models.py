@@ -26,11 +26,14 @@ class Bill(Model):
         name=None,
         quantity=None,
         value=None,
+        group_uid=None,
     ):
         """
         Add item to a bill.
         """
-        item = BillItem(uid, created_at, updated_at, name, quantity, value, self.uid)
+        item = BillItem(
+            uid, created_at, updated_at, name, quantity, value, self.uid, group_uid
+        )
         self.items.append(item)
         return item
 
