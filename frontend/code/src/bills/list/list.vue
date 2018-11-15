@@ -29,6 +29,7 @@ export default {
       fields: [
         {key: 'place', label: 'Miejsce'},
         {key: 'billed_at', label: 'Dzień'},
+        {key: 'total', label: 'Suma'},
         {key: 'actions', label: 'Akcje'} ],
       items: [],
       resource: billResource(this)

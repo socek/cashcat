@@ -9,6 +9,7 @@ from cashcat.bill.drivers import BillCommand
 from cashcat.bill.drivers import BillQuery
 from cashcat.bill.patcher import BillPatcher
 from cashcat.bill.schemas import BillSchema
+from cashcat.bill.schemas import BillSummarySchema
 from cashcat.wallet.views import BaseWalletView
 
 
@@ -24,7 +25,7 @@ class BillsView(BaseView):
         """
         wallet = self._get_wallet()
         bills = self.bill_query().list_for_wallet(wallet.uid)
-        schema = BillSchema(many=True)
+        schema = BillSummarySchema(many=True)
         return schema.dump(bills)
 
     def put(self):
@@ -54,7 +55,9 @@ class BillView(BaseView):
         """
         Update bill data.
         """
-        updated_data = self.get_validated_fields(BillSchema(), partial=("uid", "wallet_uid"))
+        updated_data = self.get_validated_fields(
+            BillSchema(), partial=("uid", "wallet_uid")
+        )
         patcher = BillPatcher(self._get_bill(), updated_data)
         result = patcher.make()
         self.bill_command().patch_by_uid(self.request.matchdict["bill_uid"], *result)

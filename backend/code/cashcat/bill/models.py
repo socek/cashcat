@@ -11,12 +11,14 @@ class Bill(Model):
         billed_at=None,
         wallet_uid=None,
         items=None,
+        total=0,
     ):
         super().__init__(uid, created_at, updated_at)
         self.place = place
         self.billed_at = billed_at
         self.wallet_uid = wallet_uid
         self.items = items or []
+        self.total = total
 
     def add_item(
         self,
@@ -56,3 +58,6 @@ class BillItem(Model):
         self.value = value
         self.bill_uid = bill_uid
         self.group_uid = group_uid
+        self.total = self.quantity * self.value if self.quantity and self.value else 0
+
+

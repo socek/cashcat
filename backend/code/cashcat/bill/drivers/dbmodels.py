@@ -35,6 +35,13 @@ class BillData(SqlDataModel):
         self.wallet_uid = model.wallet_uid
 
 
+def compute(context):
+    parameters = context.get_current_parameters()
+    value = parameters.get("value")
+    quantity = parameters.get("quantity")
+    return value * quantity if value and quantity else 0
+
+
 class BillItemData(SqlDataModel):
     __tablename__ = "bill_items"
 
@@ -43,6 +50,7 @@ class BillItemData(SqlDataModel):
     value = Column(Float, nullable=False)
     bill_uid = Column(UUID(as_uuid=True), ForeignKey("bills.uid"), nullable=False)
     group_uid = Column(UUID(as_uuid=True), ForeignKey("groups.uid"), nullable=False)
+    total = Column(Float, nullable=False, default=compute, onupdate=compute)
 
     def to_model(self):
         return BillItem(

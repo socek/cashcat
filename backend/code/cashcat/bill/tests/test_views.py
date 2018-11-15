@@ -69,7 +69,7 @@ class TestBillsView(Fixtures):
 
     def test_get(self, view, mquery, mget_user, mget_wallet):
         """
-        .get should return list of bills
+        .get should return list of summarized bills
         """
         bill_item = MagicMock()
         bill_item.uid = uuid4()
@@ -81,22 +81,15 @@ class TestBillsView(Fixtures):
         bill.uid = uuid4()
         bill.wallet_uid = uuid4()
         bill.items = [bill_item]
+        bill.total = 1.14
         mquery.list_for_wallet.return_value = [bill]
         assert view.get() == [
             {
                 "uid": str(bill.uid),
                 "place": str(bill.place),
                 "billed_at": bill.billed_at.isoformat.return_value,
-                "items": [
-                    {
-                        "uid": str(bill_item.uid),
-                        "name": str(bill_item.name),
-                        "quantity": "1.40",
-                        "value": "1.50",
-                        "group_uid": str(bill_item.group_uid),
-                    }
-                ],
                 "wallet_uid": str(bill.wallet_uid),
+                "total": "1.14",
             }
         ]
         mquery.list_for_wallet.assert_called_once_with(mget_wallet.return_value.uid)

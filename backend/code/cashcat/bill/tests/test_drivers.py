@@ -64,6 +64,43 @@ class TestBillDriver(IntegrationFixture):
             for bill in bills:
                 bill_command.force_delete(bill.uid)
 
+    def test_list_for_wallet_summary(
+        self, wallet, second_wallet, bill_query, bill_command, group
+    ):
+        """
+        .list_for_wallet should compute total for each bill
+        """
+        first = Bill(
+            uuid4(), place="lidl", billed_at=date(2018, 1, 2), wallet_uid=wallet.uid
+        )
+        first.add_item(uuid4(), name="cola", quantity=1, value=10, group_uid=group.uid)
+        first.add_item(uuid4(), name="fanta", quantity=2, value=5, group_uid=group.uid)
+
+        second = Bill(
+            uuid4(),
+            place="biedronka",
+            billed_at=date(2018, 1, 3),
+            wallet_uid=wallet.uid,
+        )
+        second.add_item(uuid4(), name="beer", quantity=6, value=1, group_uid=group.uid)
+        second.add_item(
+            uuid4(), name="wine", quantity=1, value=100, group_uid=group.uid
+        )
+
+        bills = [first, second]
+        for bill in bills:
+            bill_command.create(bill)
+
+        try:
+            result = {
+                bill.place: bill for bill in bill_query.list_for_wallet(wallet.uid)
+            }
+            assert result['lidl'].total == 20
+            assert result['biedronka'].total == 106
+        finally:
+            for bill in bills:
+                bill_command.force_delete(bill.uid)
+
     def test_get_active_by_uid_after_delete(
         self, wallet, bill_query, bill_command, bill
     ):

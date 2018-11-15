@@ -62,6 +62,12 @@ class BillItemSchema(ModelSchema):
         )
 
 
+def _to_date(obj):
+    if isinstance(obj, str):
+        return date.fromisoformat(obj)
+    return obj
+
+
 class BillSchema(ModelSchema):
     place = String(required=True, validate=not_blank)
     billed_at = Date(required=True)
@@ -77,15 +83,10 @@ class BillSchema(ModelSchema):
         return dict(
             uid=obj.uid,
             place=obj.place,
-            billed_at=self._to_date(obj.billed_at),
+            billed_at=_to_date(obj.billed_at),
             wallet_uid=obj.wallet_uid,
             items=[item for item in obj.items],
         )
-
-    def _to_date(self, obj):
-        if isinstance(obj, str):
-            return date.fromisoformat(obj)
-        return obj
 
     @post_load
     def make_model(self, data):
@@ -95,4 +96,27 @@ class BillSchema(ModelSchema):
             billed_at=data.get("billed_at"),
             wallet_uid=data.get("wallet_uid"),
             items=[item for item in data.get("items", [])],
+            total=data.get("total"),
+        )
+
+
+class BillSummarySchema(ModelSchema):
+    place = String(required=True, validate=not_blank)
+    billed_at = Date(required=True)
+    wallet_uid = UUID(required=True, allow_none=False)
+    items = Nested(
+        BillItemSchema,
+        many=True,
+        only=("uid", "name", "quantity", "value", "group_uid"),
+    )
+    total = Decimal(as_string=True, required=False, places=2, allow_none=True)
+
+    @pre_dump
+    def make_dict(self, obj):
+        return dict(
+            uid=obj.uid,
+            place=obj.place,
+            billed_at=_to_date(obj.billed_at),
+            wallet_uid=obj.wallet_uid,
+            total=obj.total,
         )
