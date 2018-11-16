@@ -6,7 +6,6 @@ import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 import VueResource from 'vue-resource'
 import Icon from 'vue-awesome/components/Icon'
-import VueNativeSock from 'vue-native-websocket'
 import datePicker from 'vue-bootstrap-datetimepicker'
 
 // Local imports
@@ -31,12 +30,6 @@ Vue.use(BootstrapVue)
 Vue.use(VueResource)
 Vue.use(Context, {contexts})
 Vue.use(datePicker)
-Vue.use(
-  VueNativeSock,
-  'ws://' + window.location.hostname + '/wsapp', {
-    connectManually: true
-  }
-)
 
 // Local plugins
 Vue.use(form)
