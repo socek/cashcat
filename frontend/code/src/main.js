@@ -12,8 +12,6 @@ import datePicker from 'vue-bootstrap-datetimepicker'
 import App from '@/App'
 import router from '@/routing'
 import store from '@/store'
-import Context from '@/context'
-import contexts from '@/contexts'
 import form from '@/forms/plugin'
 import auth from '@/auth/plugin'
 
@@ -28,7 +26,7 @@ import '@/common/style.css'
 Vue.component('icon', Icon)
 Vue.use(BootstrapVue)
 Vue.use(VueResource)
-Vue.use(Context, {contexts})
+// Vue.use(Context, {contexts})
 Vue.use(datePicker)
 
 // Local plugins
