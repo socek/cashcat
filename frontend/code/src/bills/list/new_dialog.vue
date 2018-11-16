@@ -42,6 +42,7 @@
 <script>
 import billResource from '@/bills/resource'
 import itemRow from '@/bills/list/item_input'
+import {toFormObject} from '@/forms/tools'
 
 export default {
   data () {
@@ -85,7 +86,7 @@ export default {
       let items = this.form.items
       let len = items.length
       if (items.length === 0 || items[len - 1].name.value) {
-        let field = this.$refs.form.$refs.form.toFormObject({
+        let field = toFormObject({
           _index: len,
           _isLast: true,
           name: '',
@@ -98,7 +99,7 @@ export default {
       }
     },
     onAfterReset () {
-      let field = this.$refs.form.$refs.form.toFormObject({
+      let field = toFormObject({
         _index: 0,
         _isLast: true,
         name: '',

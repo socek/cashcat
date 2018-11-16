@@ -9,6 +9,8 @@
 </template>
 
 <script>
+  import {resetForm, toFields, toFormObject, parseErrorResponse, setDefaults} from './tools'
+
   export default {
     props: {
       id: {
@@ -29,166 +31,34 @@
       }
     },
     data () {
-      this.$emit('input', this.toFormObject(this.value))
+      this.$emit('input', toFormObject(this.value))
       return {}
     },
     methods: {
-      toFormField (value) {
-        return {
-          value: value,
-          errors: [],
-          default: value
-        }
-      },
-      toFormObject (obj) {
-        obj._schema = []
-        for (let index in obj) {
-          let value = obj[index]
-          if (index.startsWith('_')) {
-            // do nothing. "_" prefixed names are special fields
-          } else if (typeof (value) === 'object') {
-            obj[index] = this.toFormObject(value)
-          } else {
-            obj[index] = this.toFormField(value)
-          }
-        }
-        return obj
-      },
-      resetFields (field) {
-        for (let index in field) {
-          let value = field[index]
-          if (value.default !== undefined) {
-            field[index].value = value.default
-          } else {
-            field[index] = this.resetFields(value)
-          }
-        }
-        return field
-      },
       resetForm () {
-        let form = this.value
-        form = this.resetErrors(form)
-        form = this.resetFields(form)
+        let form = resetForm(this.value)
         this.$emit('input', form)
         this.$emit('afterReset')
       },
-      toFieldsList (form) {
-        let fields = []
-        for (let item of form) {
-          fields.push(this.toFields(item))
-        }
-        let lastItemIndex = fields.length - 1
-        let lastItem = fields[lastItemIndex]
-        let isEmpty = true
-        for (let item in lastItem) {
-          if (lastItem[item]) {
-            isEmpty = false
-            break
-          }
-        }
-        if (isEmpty) {
-          fields.pop(lastItemIndex)
-        }
-        return fields
-      },
-      toFields (form) {
-        let fields = {}
-        for (let index in form) {
-          let value = form[index]
-          if (index.startsWith('_')) {
-            // do nothing
-          } else if (value.value !== undefined) {
-            fields[index] = value.value
-          } else if (Array.isArray(value)) {
-            fields[index] = this.toFieldsList(value)
-          } else {
-            fields[index] = this.toFields(value)
-          }
-        }
-        return fields
-      },
       onSubmit () {
-        let fields = this.toFields(this.value)
+        let fields = toFields(this.value)
         this.$emit('submit', fields)
       },
       onCancel (event) {
         this.$emit('cancel', this.value)
       },
 
-      resetErrors (field) {
-        for (let index in field) {
-          let value = field[index]
-          if (index === 'errors') {
-            field[index] = []
-          } else if (value.default !== undefined) {
-            field[index].errors = []
-          } else {
-            field[index] = this.resetErrors(value)
-          }
-        }
-        return field
-      },
-
-      setErrors (form, errors) {
-        for (let index in errors) {
-          if (index.startsWith('_')) {
-            form._schema = errors[index]
-          } else if (typeof (errors[index][0]) === 'string') {
-            form[index].errors = errors[index]
-          } else {
-            form[index] = this.setErrors(form[index], errors[index])
-          }
-        }
-        return form
-      },
       parseErrorResponse (response) {
-        if (response.status === 400) {
-          let form = this.value
-          form = this.resetErrors(form)
-          form = this.setErrors(form, response.body)
+        let form = parseErrorResponse(this.value, response)
+        if (form) {
           this.$emit('input', form)
         } else {
           console.log('something bad has happened', response)
         }
       },
-
-      setFormDefaults (form, defaults) {
-        for (let index in defaults) {
-          let value = defaults[index]
-          if (Array.isArray(value)) {
-            form[index] = this.setFormDefaultsForList(value)
-          } else if (typeof (value) === 'object') {
-            form[index] = this.setFormDefaults(form[index], value)
-          } else if (form[index] === undefined) {
-            // Ignore missing fields
-          } else {
-            form[index].default = value
-          }
-        }
-        return form
-      },
       setDefaults (defaults) {
-        let form = this.setFormDefaults(this.value, defaults)
-        form = this.resetFields(form)
+        let form = setDefaults(this.value, defaults)
         this.$emit('input', form)
-      },
-      setFormDefaultsForList (defaults) {
-        let form = []
-        for (let index in defaults) {
-          let value = defaults[index]
-          let item = {
-            _index: form.length
-          }
-          for (let key in value) {
-            item[key] = {
-              value: value[key],
-              errors: [],
-              default: value[key]
-            }
-          }
-          form.push(item)
-        }
-        return form
       }
     }
   }
