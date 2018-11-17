@@ -6242,6 +6242,10 @@ vue-router@^2.3.1:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-2.7.0.tgz#16d424493aa51c3c8cce8b7c7210ea4c3a89aff1"
 
+vue-select@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-2.5.1.tgz#9886e7123150a52dc8dbfe3202d0387268835aaa"
+
 vue-strap@^1.1.37:
   version "1.1.37"
   resolved "https://registry.yarnpkg.com/vue-strap/-/vue-strap-1.1.37.tgz#bf8691ba6e5e2f0f8453152aff9b0e9f592f7e34"

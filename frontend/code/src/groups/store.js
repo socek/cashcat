@@ -3,13 +3,18 @@ import groupResource from '@/groups/resource'
 export default {
   namespaced: true,
   state: {
-    groups: []
+    groups: [],
+    dict: {}
   },
   getters: {
   },
   mutations: {
     setGroups (state, groups) {
       state.groups = groups
+      state.dict = {}
+      for (let group of groups) {
+        state.dict[group.uid] = group
+      }
     }
   },
   actions: {

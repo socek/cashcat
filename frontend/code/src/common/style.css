@@ -131,3 +131,17 @@ main {
 .modal-dialog {
   margin: 3.75rem auto;
 }
+
+.dropdown-toggle::after {
+  content: none;
+}
+.dropdown-toggle {
+  height: calc(2.25rem + 2px);
+}
+.v-select .dropdown-toggle {
+  border: none;
+}
+
+.dropdown.v-select.form-control {
+  padding: 0;
+}

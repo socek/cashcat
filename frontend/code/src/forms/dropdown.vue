@@ -1,9 +1,11 @@
 <template>
-  <select class="form-control" v-model="value.value">
-    <option v-for="option in options" v-bind:value="option.value">
-      {{ option.text }}
-    </option>
-  </select>
+  <v-select
+    class="form-control"
+    :class="inputClass()"
+    label="text"
+    v-model="selected"
+    :options="options"
+    @input="onInputSelect"></v-select>
 </template>
 
 <script>
@@ -14,6 +16,28 @@
     props: {
       options: {
         required: true
+      }
+    },
+    data () {
+      return {
+        selected: this.getOptionByValue(this.value.value)
+      }
+    },
+    updated () {
+      this.selected = this.getOptionByValue(this.value.value)
+    },
+    methods: {
+      getOptionByValue (value) {
+        for (let option of this.options) {
+          if (option.value === value) {
+            return option
+          }
+        }
+      },
+      onInputSelect (element) {
+        let value = this.value
+        value.value = element ? element.value : null
+        this.$emit('input', value)
       }
     }
   }

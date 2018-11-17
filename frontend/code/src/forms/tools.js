@@ -81,7 +81,7 @@ export let formActions = {
   },
 
   _setDefaults: function (form, defaults) {
-    /// Set default values for form object fields.
+    // Set default values for form object fields.
     for (let index in defaults) {
       let value = defaults[index]
       if (Array.isArray(value)) {
@@ -118,7 +118,7 @@ export let formActions = {
 }
 
 export function convertToData (form) {
-  /// Convert Form object into a key -> value structure.
+  // Convert Form object into a key -> value structure.
   let toList = function (form) {
     let fields = []
     for (let item of form) {

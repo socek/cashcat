@@ -1,17 +1,17 @@
 <template>
   <div class="form-row">
-    <div role="group" class="form-group col-md-4">
+    <div role="group" class="form-group col-md-3">
       <input type="text" v-model="value.name.value" class="form-control" placeholder="Nazwa produktu" :class="{'is-invalid': value.name.errors.length > 0}"  @input="onInput">
       <div class="invalid-feedback" style="display: block;" v-for="message in value.name.errors">{{ message }}</div>
     </div>
 
-    <div role="group" class="form-group col-md-2">
-      <dropdown v-model="value.group_uid" :options="groups" :class="{'is-invalid': value.group_uid.errors.length > 0}"></dropdown>
+    <div role="group" class="form-group col-md-3">
+      <dropdown v-model="value.group_uid" :options="groups" @input="onInput"></dropdown>
       <div class="invalid-feedback" style="display: block;" v-for="message in value.group_uid.errors">{{ message }}</div>
     </div>
 
     <div role="group" class="form-group col-md-2 is-valid">
-      <input type="number" step="0.00001" v-model="value.quantity.value" class="form-control" placeholder="1.00" :class="{'is-invalid': value.quantity.errors.length > 0}"  @input="onInput">
+      <input type="number" step="0.00001" v-model="value.quantity.value" class="form-control" placeholder="1.00" :class="{'is-invalid': value.quantity.errors.length > 0}" @input="onInput">
       <div class="invalid-feedback" style="display: block;" v-for="message in value.quantity.errors">{{ message }}</div>
     </div>
 
@@ -41,9 +41,6 @@ export default {
       required: true
     }
   },
-  data () {
-    return {}
-  },
   methods: {
     formatCurrency () {
       let form = this.value
@@ -63,7 +60,7 @@ export default {
   },
   computed: {
     groups () {
-      let data = [{value: '', text: '(wybierz)'}]
+      let data = []
       for (let group of this.$store.state.groups.groups) {
         data.push({value: group.uid, text: group.name})
       }

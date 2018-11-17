@@ -7,6 +7,7 @@ import BootstrapVue from 'bootstrap-vue'
 import VueResource from 'vue-resource'
 import Icon from 'vue-awesome/components/Icon'
 import datePicker from 'vue-bootstrap-datetimepicker'
+import vSelect from 'vue-select'
 
 // Local imports
 import App from '@/App'
@@ -26,8 +27,8 @@ import '@/common/style.css'
 Vue.component('icon', Icon)
 Vue.use(BootstrapVue)
 Vue.use(VueResource)
-// Vue.use(Context, {contexts})
 Vue.use(datePicker)
+Vue.component('v-select', vSelect)
 
 // Local plugins
 Vue.use(form)
