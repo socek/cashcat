@@ -9,7 +9,7 @@
 </template>
 
 <script>
-  import {resetForm, toFields, toFormObject, parseErrorResponse, setDefaults} from './tools'
+  import {formActions, convertToData, convertToForm} from './tools'
 
   export default {
     props: {
@@ -31,17 +31,17 @@
       }
     },
     data () {
-      this.$emit('input', toFormObject(this.value))
+      this.$emit('input', convertToForm(this.value))
       return {}
     },
     methods: {
       resetForm () {
-        let form = resetForm(this.value)
+        let form = formActions.reset(this.value)
         this.$emit('input', form)
         this.$emit('afterReset')
       },
       onSubmit () {
-        let fields = toFields(this.value)
+        let fields = convertToData(this.value)
         this.$emit('submit', fields)
       },
       onCancel (event) {
@@ -49,15 +49,16 @@
       },
 
       parseErrorResponse (response) {
-        let form = parseErrorResponse(this.value, response)
-        if (form) {
+        if (response.status === 400) {
+          let form = formActions.resetErrors(this.value)
+          form = formActions.setErrors(form, response.body)
           this.$emit('input', form)
         } else {
           console.log('something bad has happened', response)
         }
       },
       setDefaults (defaults) {
-        let form = setDefaults(this.value, defaults)
+        let form = formActions.setDefaults(this.value, defaults)
         this.$emit('input', form)
       }
     }
