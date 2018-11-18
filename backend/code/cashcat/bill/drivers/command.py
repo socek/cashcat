@@ -64,4 +64,10 @@ class BillCommand(Command):
         update_raw = {}
         for key, value in update.items():
             update_raw[getattr(self.item_data_model, key)] = value
+
+        if 'quantity' in update or 'value' in update:
+            quantity = update.get('quantity') or self.item_data_model.quantity
+            value = update.get('value') or self.item_data_model.value
+            update_raw['total'] = quantity * value
+
         self._item_query().filter(self.item_data_model.uid == uid).update(update_raw)

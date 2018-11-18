@@ -95,8 +95,67 @@ class TestBillDriver(IntegrationFixture):
             result = {
                 bill.place: bill for bill in bill_query.list_for_wallet(wallet.uid)
             }
-            assert result['lidl'].total == 20
-            assert result['biedronka'].total == 106
+            assert result["lidl"].total == 20
+            assert result["biedronka"].total == 106
+        finally:
+            for bill in bills:
+                bill_command.force_delete(bill.uid)
+
+    def test_updating_total(
+        self, wallet, second_wallet, bill_query, bill_command, group, dbsession
+    ):
+        """
+        Updating items should update total values as well
+        """
+        update_item_uid = uuid4()
+        remove_item_uid = uuid4()
+        first = Bill(
+            uuid4(), place="lidl", billed_at=date(2018, 1, 2), wallet_uid=wallet.uid
+        )
+        first.add_item(
+            update_item_uid, name="cola", quantity=1, value=10, group_uid=group.uid
+        )
+        first.add_item(uuid4(), name="fanta", quantity=2, value=5, group_uid=group.uid)
+
+        second = Bill(
+            uuid4(),
+            place="biedronka",
+            billed_at=date(2018, 1, 3),
+            wallet_uid=wallet.uid,
+        )
+        second.add_item(uuid4(), name="beer", quantity=6, value=1, group_uid=group.uid)
+        second.add_item(
+            remove_item_uid, name="wine", quantity=1, value=100, group_uid=group.uid
+        )
+
+        bills = [first, second]
+        for bill in bills:
+            bill_command.create(bill)
+
+        bill_command.patch_by_uid(
+            first.uid,
+            create_items=[
+                BillItem(
+                    uid=uuid4(),
+                    name="green up",
+                    quantity=1,
+                    value=5,
+                    group_uid=group.uid,
+                )
+            ],
+            items_update={update_item_uid: {"quantity": 2}},
+        )
+
+        bill_command.patch_by_uid(second.uid, remove_items=[remove_item_uid])
+
+        dbsession.flush()
+
+        try:
+            result = {
+                bill.place: bill for bill in bill_query.list_for_wallet(wallet.uid)
+            }
+            assert result["biedronka"].total == 6
+            assert result["lidl"].total == 35
         finally:
             for bill in bills:
                 bill_command.force_delete(bill.uid)
