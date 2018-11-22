@@ -38,7 +38,7 @@
   </dialogform>
 </template>
 <script>
-  import newDialog from '@/bills/list/new_dialog'
+  import newDialog from '@/bills/dialogs/new'
 
   export default {
     props: [ 'bill_uid' ],

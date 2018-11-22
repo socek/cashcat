@@ -19,8 +19,8 @@
 
 <script>
 import billResource from '@/bills/resource'
-import newDialog from '@/bills/list/new_dialog'
-import editDialog from '@/bills/list/edit_dialog'
+import newDialog from '@/bills/dialogs/new'
+import editDialog from '@/bills/dialogs/edit'
 
 export default {
   data () {
