@@ -3,11 +3,9 @@
     title="Nowy rachunek"
     size="lg"
 
-    ref="form"
+    ref="dialog"
     v-model="form"
-    @success="$emit('success')"
-    @submit="onSubmit"
-    @afterReset="onAfterReset">
+    @submit="onSubmit">
 
     <template slot="anhor">
       <icon name="plus-circle" />
@@ -42,12 +40,12 @@
 <script>
 import billResource from '@/bills/resource'
 import itemRow from '@/bills/list/item_input'
-import {convertToForm} from '@/forms/tools'
+import form from '@/forms'
 
 export default {
   data () {
     return {
-      form: {
+      form: form({
         place: '',
         billed_at: '', // paste here current date
         items: [{
@@ -57,16 +55,20 @@ export default {
           value: '',
           group_uid: ''
         }]
-      },
+      }),
       resource: billResource(this),
       sum: 0
     }
   },
   methods: {
     onSubmit (form) {
-      this.resource.create({}, form).then((response) => {
-        this.$refs.form.onSuccess()
-      }).catch(this.$refs.form.parseErrorResponse)
+      form.submit(
+        () => this.resource.create({}, form.toData()),
+        (response) => {
+          this.$refs.dialog.hide()
+          this.$emit('success')
+        }
+      )
     },
     countSum () {
       this.sum = 0
@@ -86,7 +88,7 @@ export default {
       let items = this.form.items
       let len = items.length
       if (items.length === 0 || items[len - 1].name.value) {
-        let field = convertToForm({
+        let field = form({
           _index: len,
           _isLast: true,
           name: '',
@@ -97,17 +99,6 @@ export default {
         this.form.items[len - 1]._isLast = false
         this.form.items.push(field)
       }
-    },
-    onAfterReset () {
-      let field = convertToForm({
-        _index: 0,
-        _isLast: true,
-        name: '',
-        quantity: '',
-        value: '',
-        group_uid: ''
-      })
-      this.form.items = [field]
     },
     onInput () {
       this.ensureEmptyItemAtEnd()

@@ -12,14 +12,15 @@
 
 <script>
 import authResource from '@/auth/resource'
+import form from '@/forms'
 
 export default {
   data () {
     return {
-      form: {
+      form: form({
         email: '',
         password: ''
-      },
+      }),
       resource: authResource(this)
     }
   },

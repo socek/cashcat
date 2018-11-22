@@ -3,9 +3,8 @@
     title="Edytuj portfel"
 
     :fetchContent="fetchContent"
-    ref="form"
+    ref="dialog"
     v-model="form"
-    @success="$emit('success')"
     @submit="onSubmit">
 
       <template slot="anhor">
@@ -22,15 +21,16 @@
 
 <script>
 import walletResource from '@/wallets/resource'
+import form from '@/forms'
 
 export default {
   props: ['wallet_uid'],
 
   data () {
     return {
-      form: {
+      form: form({
         name: ''
-      },
+      }),
       resource: walletResource(this)
     }
   },
@@ -39,10 +39,15 @@ export default {
       return this.resource.get({wallet_uid: this.wallet_uid})
     },
     onSubmit (form) {
-      walletResource(this).update({wallet_uid: this.wallet_uid}, form).then((response) => {
-        this.$store.dispatch('wallets/fetchWallets')
-        this.$refs.form.onSuccess()
-      }).catch(this.$refs.form.parseErrorResponse)
+      form.submit(
+        () => walletResource(this).update(
+          {wallet_uid: this.wallet_uid},
+          form.toData()),
+        (response) => {
+          this.$store.dispatch('wallets/fetchWallets')
+          this.$refs.dialog.hide()
+        }
+      )
     }
   }
 }

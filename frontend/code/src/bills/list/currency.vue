@@ -45,9 +45,6 @@
       },
       onInput (event) {
         this.$emit('input', this.data)
-      },
-      resetInput () {
-        this.data = ''
       }
     }
   }

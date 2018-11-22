@@ -33,17 +33,11 @@ export default {
       isBusy: false,
       fields: [ {key: 'name', label: 'Nazwa'}, {key: 'actions', label: 'Akcje'} ],
       items: [],
-      myval: {
-        name: 'myname',
-        count: 0
-      },
       resource: walletResource(this)
     }
   },
   computed: {
-    provider (ctx) {
-      return this.$store.state.wallets.wallets
-    }
+    provider (ctx) { return this.$store.state.wallets.wallets }
   },
   components: {
     editDialog,

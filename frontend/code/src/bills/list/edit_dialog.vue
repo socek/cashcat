@@ -4,11 +4,9 @@
     size="lg"
     :fetchContent="fetchContent"
 
-    ref="form"
+    ref="dialog"
     v-model="form"
-    @success="$emit('success')"
     @submit="onSubmit"
-    @afterReset="onAfterReset"
     @afterFetchContent="onAfterFetchContent">
 
     <template slot="anhor">
@@ -47,9 +45,13 @@
     extends: newDialog,
     methods: {
       onSubmit (form) {
-        this.resource.update({bill_uid: this.bill_uid}, form).then((response) => {
-          this.$refs.form.onSuccess()
-        }).catch(this.$refs.form.parseErrorResponse)
+        form.submit(
+          () => this.resource.update({bill_uid: this.bill_uid}, form.toData()),
+          (response) => {
+            this.$refs.dialog.hide()
+            this.$emit('success')
+          }
+        )
       },
       fetchContent () {
         return this.resource.get({bill_uid: this.bill_uid})

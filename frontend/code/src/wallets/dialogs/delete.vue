@@ -1,12 +1,5 @@
 <template>
-  <dialogform
-    title="Usuń portfel"
-
-    ref="form"
-    v-model="form"
-    @success="$emit('success')"
-    @submit="onSubmit">
-
+  <dialogform title="Usuń portfel" ref="dialog" v-model="form" @submit="onSubmit">
     <template slot="anhor">
       <icon name="trash" />
     </template>
@@ -20,12 +13,13 @@
 
 <script>
 import walletResource from '@/wallets/resource'
+import form from '@/forms'
 
 export default {
   props: ['wallet_uid'],
   data () {
     return {
-      form: {}
+      form: form({})
     }
   },
   methods: {
@@ -33,10 +27,13 @@ export default {
       return this.$store.state.wallets.dict[this.wallet_uid]
     },
     onSubmit (form) {
-      return walletResource(this).delete({wallet_uid: this.wallet_uid}, {}).then((response) => {
-        this.$store.dispatch('wallets/fetchWallets')
-        this.$refs.form.onSuccess()
-      }).catch(this.$refs.form.parseErrorResponse)
+      form.submit(
+        () => walletResource(this).delete({wallet_uid: this.wallet_uid}, {}),
+        (response) => {
+          this.$store.dispatch('wallets/fetchWallets')
+          this.$refs.dialog.hide()
+        }
+      )
     }
   }
 }

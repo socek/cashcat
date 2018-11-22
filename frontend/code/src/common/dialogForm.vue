@@ -5,7 +5,7 @@
     </b-btn>
 
     <b-modal ref="modal" :size="size" :title="title" hide-footer>
-      <ccform ref="form" v-model="value" @submit="onSubmit" @cancel="$refs.modal.hide()" v-show="!isBusy" @afterReset="$emit('afterReset')">
+      <ccform ref="form" v-model="value" @submit="$emit('submit', value)" @cancel="$refs.modal.hide()" v-show="!isBusy">
         <slot name="content"></slot>
       </ccform>
       <div v-show="isBusy" class="modal-spiner">
@@ -46,27 +46,15 @@
         this.$refs.modal.show()
         if (this.fetchContent) {
           this.fetchContent().then((response) => {
-            this.$refs.form.setDefaults(response.body)
+            this.value.setDefaults(response.body)
             this.isBusy = false
             this.$emit('afterFetchContent', response.body)
           })
         } else {
-          this.$refs.form.resetForm()
+          this.value.reset()
         }
       },
-      hideModal () {
-        this.$refs.modal.hide()
-      },
-      onSubmit (fields) {
-        this.$emit('submit', fields)
-      },
-      onSuccess () {
-        this.$refs.modal.hide()
-        this.$emit('success')
-      },
-      parseErrorResponse (response) {
-        return this.$refs.form.parseErrorResponse(response)
-      }
+      hide () { this.$refs.modal.hide() }
     }
   }
 </script>

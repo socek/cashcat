@@ -2,9 +2,8 @@
   <dialogform
     title="Nowy portfel"
 
-    ref="form"
+    ref="dialog"
     v-model="form"
-    @success="$emit('success')"
     @submit="onSubmit">
 
     <template slot="anhor">
@@ -19,21 +18,25 @@
 
 <script>
 import walletResource from '@/wallets/resource'
+import form from '@/forms'
 
 export default {
   data () {
     return {
-      form: {
+      form: form({
         name: ''
-      }
+      })
     }
   },
   methods: {
     onSubmit (form) {
-      return walletResource(this).create({}, form).then((response) => {
-        this.$store.dispatch('wallets/fetchWallets')
-        this.$refs.form.onSuccess()
-      }).catch(this.$refs.form.parseErrorResponse)
+      form.submit(
+        () => walletResource(this).create({}, form.toData()),
+        (response) => {
+          this.$store.dispatch('wallets/fetchWallets')
+          this.$refs.dialog.hide()
+        }
+      )
     }
   }
 }

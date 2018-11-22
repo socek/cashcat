@@ -1,3 +1,7 @@
+function isFunction (functionToCheck) {
+  return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]'
+}
+
 export function convertToForm (obj) {
   let toField = function (value) {
     return {
@@ -22,11 +26,51 @@ export function convertToForm (obj) {
     return obj
   }
 
-  return toObject(obj)
-}
+  obj = toObject(obj)
 
-export let formActions = {
-  resetErrors: function (field) {
+  obj.toData = function () {
+    // Convert Form object into a key -> value structure.
+    let toList = function (form) {
+      let fields = []
+      for (let item of form) {
+        fields.push(toValue(item))
+      }
+      let lastItemIndex = fields.length - 1
+      let lastItem = fields[lastItemIndex]
+      let isEmpty = true
+      for (let item in lastItem) {
+        if (lastItem[item]) {
+          isEmpty = false
+          break
+        }
+      }
+      if (isEmpty) {
+        fields.pop(lastItemIndex)
+      }
+      return fields
+    }
+
+    let toValue = function (form) {
+      let fields = {}
+      for (let index in form) {
+        let value = form[index]
+        if (index.startsWith('_') || isFunction(value)) {
+          // do nothing
+        } else if (value.value !== undefined) {
+          fields[index] = value.value
+        } else if (Array.isArray(value)) {
+          fields[index] = toList(value)
+        } else {
+          fields[index] = toValue(value)
+        }
+      }
+      return fields
+    }
+
+    return toValue(this)
+  }
+
+  obj._resetErrors = function (field) {
     // Remove error state from all fields
     for (let index in field) {
       let value = field[index]
@@ -35,32 +79,32 @@ export let formActions = {
       } else if (value.default !== undefined) {
         field[index].errors = []
       } else {
-        field[index] = this.resetErrors(value)
+        field[index] = this._resetErrors(value)
       }
     }
     return field
-  },
+  }
 
-  resetFields: function (field) {
+  obj._resetFields = function (field) {
     // Set fields to default values
     for (let index in field) {
       let value = field[index]
       if (value.default !== undefined) {
         field[index].value = value.default
       } else {
-        field[index] = this.resetFields(value)
+        field[index] = this._resetFields(value)
       }
     }
     return field
-  },
+  }
 
-  reset: function (form) {
+  obj.reset = function () {
     // Reset fields to default values and remove error states
-    form = this.resetErrors(form)
-    return this.resetFields(form)
-  },
+    this._resetErrors(this)
+    this._resetFields(this)
+  }
 
-  setErrors: function (form, errors) {
+  obj._setErrors = function (form, errors) {
     // Set error states and messages
     for (let index in errors) {
       if (index.startsWith('_')) {
@@ -68,19 +112,24 @@ export let formActions = {
       } else if (typeof (errors[index][0]) === 'string') {
         form[index].errors = errors[index]
       } else {
-        form[index] = this.setErrors(form[index], errors[index])
+        form[index] = this._setErrors(form[index], errors[index])
       }
     }
     return form
-  },
+  }
 
-  setDefaults: function (form, defaults) {
+  obj.setErrors = function (errors) {
+    this._resetErrors(this)
+    this._setErrors(this, errors)
+  }
+
+  obj.setDefaults = function (defaults) {
     // Set default values for form, and reset that from
-    form = this._setDefaults(form, defaults)
-    return this.resetFields(form)
-  },
+    this._setDefaults(this, defaults)
+    this._resetFields(this)
+  }
 
-  _setDefaults: function (form, defaults) {
+  obj._setDefaults = function (form, defaults) {
     // Set default values for form object fields.
     for (let index in defaults) {
       let value = defaults[index]
@@ -95,9 +144,9 @@ export let formActions = {
       }
     }
     return form
-  },
+  }
 
-  _setDefaultsForList: function (defaults) {
+  obj._setDefaultsForList = function (defaults) {
     let form = []
     for (let index in defaults) {
       let value = defaults[index]
@@ -115,47 +164,18 @@ export let formActions = {
     }
     return form
   }
-}
 
-export function convertToData (form) {
-  // Convert Form object into a key -> value structure.
-  let toList = function (form) {
-    let fields = []
-    for (let item of form) {
-      fields.push(toValue(item))
+  obj._parseErrorResponse = function (response) {
+    if (response.status === 400) {
+      this.setErrors(response.body)
+    } else {
+      console.log('something bad has happened', response)
     }
-    let lastItemIndex = fields.length - 1
-    let lastItem = fields[lastItemIndex]
-    let isEmpty = true
-    for (let item in lastItem) {
-      if (lastItem[item]) {
-        isEmpty = false
-        break
-      }
-    }
-    if (isEmpty) {
-      fields.pop(lastItemIndex)
-    }
-    return fields
   }
 
-  let toValue = function (form) {
-    let fields = {}
-    for (let index in form) {
-      let value = form[index]
-      if (index.startsWith('_')) {
-        // do nothing
-      } else if (value.value !== undefined) {
-        fields[index] = value.value
-      } else if (Array.isArray(value)) {
-        fields[index] = toList(value)
-      } else {
-        fields[index] = toValue(value)
-      }
-    }
-    return fields
+  obj.submit = function (query, success) {
+    query().then(success).catch(this._parseErrorResponse.bind(this))
   }
 
-  return toValue(form)
+  return obj
 }
-

@@ -1,11 +1,5 @@
 <template>
-  <dialogform
-    title="Nowa grupa"
-
-    ref="form"
-    v-model="form"
-    @success="$emit('success')"
-    @submit="onSubmit">
+  <dialogform title="Nowa grupa" ref="dialog" v-model="form" @submit="onSubmit">
 
     <template slot="anhor">
       <icon name="plus-circle" />
@@ -19,21 +13,25 @@
 
 <script>
 import groupResource from '@/groups/resource'
+import form from '@/forms'
 
 export default {
   data () {
     return {
-      form: {
+      form: form({
         name: ''
-      }
+      })
     }
   },
   methods: {
     onSubmit (form) {
-      return groupResource(this).create({}, form).then((response) => {
-        this.$store.dispatch('groups/fetchGroups')
-        this.$refs.form.onSuccess()
-      }).catch(this.$refs.form.parseErrorResponse)
+      form.submit(
+        () => groupResource(this).create({}, form.toData()),
+        (response) => {
+          this.$store.dispatch('groups/fetchGroups')
+          this.$refs.dialog.hide()
+        }
+      )
     }
   }
 }

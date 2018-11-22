@@ -46,3 +46,4 @@ export default new Vue({
   template: '<App/>',
   components: { App }
 })
+

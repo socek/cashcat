@@ -1,12 +1,5 @@
 <template>
-  <dialogform
-    title="Edytuj grupę"
-
-    :fetchContent="fetchContent"
-    ref="form"
-    v-model="form"
-    @success="$emit('success')"
-    @submit="onSubmit">
+  <dialogform title="Edytuj grupę" :fetchContent="fetchContent" ref="dialog" v-model="form" @submit="onSubmit">
 
       <template slot="anhor">
         <icon name="edit"></icon>
@@ -22,15 +15,16 @@
 
 <script>
 import groupResource from '@/groups/resource'
+import form from '@/forms'
 
 export default {
   props: ['group_uid'],
 
   data () {
     return {
-      form: {
+      form: form({
         name: ''
-      },
+      }),
       resource: groupResource(this)
     }
   },
@@ -39,10 +33,13 @@ export default {
       return this.resource.get({group_uid: this.group_uid})
     },
     onSubmit (form) {
-      groupResource(this).update({group_uid: this.group_uid}, form).then((response) => {
-        this.$store.dispatch('groups/fetchGroups')
-        this.$refs.form.onSuccess()
-      }).catch(this.$refs.form.parseErrorResponse)
+      form.submit(
+        () => groupResource(this).update({group_uid: this.group_uid}, form.toData()),
+        (response) => {
+          this.$store.dispatch('groups/fetchGroups')
+          this.$refs.dialog.hide()
+        }
+      )
     }
   }
 }
