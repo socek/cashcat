@@ -18,7 +18,6 @@
       <item-row
         v-for="(item, index) in form.items"
         v-model="form.items[index]"
-        :index="item._index"
         :key="item._index"
         @input="onInput"
         @removeItem="removeItem"></item-row>
