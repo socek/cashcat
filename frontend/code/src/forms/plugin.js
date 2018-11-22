@@ -1,10 +1,9 @@
-import dialogform from '@/common/dialogForm'
-
 import passwordInput from './password'
 import textInput from './text'
 import ccform from './form'
 import dateInput from './date'
 import dropdown from './dropdown'
+import dialogform from './dialog_form'
 
 export default {
   install (Vue, options) {

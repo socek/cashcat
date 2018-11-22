@@ -21,10 +21,10 @@
 <script>
 import base from '@/forms/base'
 
-import currency from '@/bills/dialogs/widgets/currency'
-import name from '@/bills/dialogs/widgets/name'
-import group from '@/bills/dialogs/widgets/group'
-import quantity from '@/bills/dialogs/widgets/quantity'
+import currency from './currency'
+import name from './name'
+import group from './group'
+import quantity from './quantity'
 
 export default {
   extends: base,
