@@ -95,7 +95,9 @@ export default {
           value: '',
           group_uid: ''
         })
-        this.form.items[len - 1]._isLast = false
+        if (len > 0) {
+          this.form.items[len - 1]._isLast = false
+        }
         this.form.items.push(field)
       }
     },
