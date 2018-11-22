@@ -1,6 +1,14 @@
 <template>
   <div role="group" class="form-group col currency">
-    <input type="number" name="value" v-model="data" step="0.01"  @blur="formatCurrency()" class="form-control" placeholder="-1,00" @input="onInput" />
+    <input
+      type="number"
+      name="value"
+      v-model="data"
+      step="0.01"
+      @blur="formatCurrency()"
+      class="form-control"
+      placeholder="-1,00"
+      @input="$emit('input', data)">
     <div class="input-group-append">
       <span class="input-group-text">PLN</span>
     </div>
@@ -42,9 +50,6 @@
           }
           this.data = num
         }
-      },
-      onInput (event) {
-        this.$emit('input', this.data)
       }
     }
   }
