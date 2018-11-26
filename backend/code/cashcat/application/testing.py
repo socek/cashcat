@@ -76,46 +76,52 @@ class CashcatFixturesMixin(object):
     group_data = {"name": "Group1"}
     second_group_data = {"name": "Group2"}
 
-    @fixture
+    @fixture(scope="module")
+    def app(self, config):
+        with config as app:
+            yield app
+
+    @fixture(scope="module")
     def dbsession(self, app):
         return app.dbsession
 
-    @fixture
+    @fixture(scope="module")
     def user_query(self, app):
         return UserQuery(app.dbsession)
 
-    @fixture
+    @fixture(scope="module")
     def user_command(self, app):
         return UserCommand(app.dbsession)
 
-    @fixture
+    @fixture(scope="module")
     def wallet_query(self, app):
         return WalletQuery(app.dbsession)
 
-    @fixture
+    @fixture(scope="module")
     def wallet_command(self, app):
         return WalletCommand(app.dbsession)
 
-    @fixture
+    @fixture(scope="module")
     def bill_query(self, app):
         return BillQuery(app.dbsession)
 
-    @fixture
+    @fixture(scope="module")
     def bill_command(self, app):
         return BillCommand(app.dbsession)
 
-    @fixture
+    @fixture(scope="module")
     def group_query(self, app):
         return GroupQuery(app.dbsession)
 
-    @fixture
+    @fixture(scope="module")
     def group_command(self, app):
         return GroupCommand(app.dbsession)
 
-    @fixture
-    def user(self, user_command):
+    @fixture(scope="module")
+    def user(self, user_command, email=None):
         uid = uuid4()
         user_data = dict(self.user_data)
+        user_data['email'] = email or user_data['email']
         password_txt = user_data.pop("password")
         user = User(uid, **user_data)
         user.set_password(password_txt)
@@ -124,6 +130,10 @@ class CashcatFixturesMixin(object):
         user_command.force_delete(uid)
 
     @fixture
+    def dynamic_user(self, user_command):
+        yield from self.user(user_command, 'dynamic@gmail.com')
+
+    @fixture(scope="module")
     def second_user(self, user_command):
         uid = uuid4()
         user_data = dict(self.second_user_data)
@@ -134,7 +144,7 @@ class CashcatFixturesMixin(object):
         yield user
         user_command.force_delete(uid)
 
-    @fixture
+    @fixture(scope="module")
     def wallet(self, wallet_command, user):
         uid = uuid4()
         wallet = Wallet(uid, owner_uid=user.uid, **self.wallet_data)
@@ -144,7 +154,7 @@ class CashcatFixturesMixin(object):
         yield wallet
         wallet_command.force_delete(uid)
 
-    @fixture
+    @fixture(scope="module")
     def second_wallet(self, wallet_command, user):
         uid = uuid4()
         wallet = Wallet(uid, owner_uid=user.uid, **self.second_wallet_data)
@@ -152,7 +162,7 @@ class CashcatFixturesMixin(object):
         yield wallet
         wallet_command.force_delete(uid)
 
-    @fixture
+    @fixture(scope="module")
     def group(self, group_command, wallet):
         uid = uuid4()
         group = Group(uid, wallet_uid=wallet.uid, **self.group_data)
@@ -160,7 +170,7 @@ class CashcatFixturesMixin(object):
         yield group
         group_command.force_delete(uid)
 
-    @fixture
+    @fixture(scope="module")
     def second_group(self, group_command, wallet):
         uid = uuid4()
         group = Group(uid, wallet_uid=wallet.uid, **self.second_group_data)

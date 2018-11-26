@@ -9,7 +9,7 @@ class TestUserDriver(IntegrationFixture):
         assert user_query.find_by_email(self.user_data["email"]).uid == user.uid
 
     def test_find_by_email_with_no_user(self, user_query):
-        assert user_query.find_by_email(self.user_data["email"]) is None
+        assert user_query.find_by_email(self.user_data["email"] + 'c') is None
 
     def test_create(self, user):
         assert user.uid
@@ -38,14 +38,14 @@ class TestUserDriver(IntegrationFixture):
         with raises(NoResultFound):
             user_query.get_by_uid("x")
 
-    def test_delete(self, user_command, user_query, user):
-        user_command.delete(user.uid)
+    def test_delete(self, user_command, user_query, dynamic_user):
+        user_command.delete(dynamic_user.uid)
 
         with raises(NoResultFound):
-            user_query.get_by_uid(user.uid)
+            user_query.get_by_uid(dynamic_user.uid)
 
-        assert list(user_query.list_active()) == []
-        assert len(list(user_query.list_all())) == 1
+        result = [user.uid for user in user_query.list_active()]
+        assert dynamic_user.uid not in result
 
     def test_list_active(self, user_query, user):
         data = list(user_query.list_active())
