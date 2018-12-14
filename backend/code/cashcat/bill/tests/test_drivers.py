@@ -6,7 +6,8 @@ from pytest import raises
 
 from cashcat.application.drivers.query import NoResultFound
 from cashcat.application.testing import IntegrationFixture
-from cashcat.bill.models import Bill, BillItem
+from cashcat.bill.models import Bill
+from cashcat.bill.models import BillItem
 
 
 class TestBillDriver(IntegrationFixture):

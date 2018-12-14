@@ -27,10 +27,6 @@ class Query(BaseQuery):
         except (SANoResultFound, DataError):
             raise NoResultFound
 
-    def list_all(self):
-        for obj in self._query():
-            yield obj.to_model()
-
     def _list_active(self):
         return self._query().filter(self.model.is_active.is_(True))
 
