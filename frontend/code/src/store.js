@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 
 import auth from '@/auth/store'
 import groups from '@/groups/store'
-import wallets from '@/wallets/store'
+import {wallets, month} from '@/wallets/store'
 
 Vue.use(Vuex)
 
@@ -27,6 +27,7 @@ export default new Vuex.Store({
   modules: {
     auth,
     groups,
-    wallets
+    wallets,
+    month
   }
 })

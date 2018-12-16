@@ -1,6 +1,8 @@
+import moment from 'moment'
+
 import walletResource from '@/wallets/resource'
 
-export default {
+export let wallets = {
   namespaced: true,
   state: {
     wallets: [],
@@ -26,3 +28,16 @@ export default {
     }
   }
 }
+
+export let month = {
+  namespaced: true,
+  state: {
+    month: moment()
+  },
+  mutations: {
+    setMonth (state, month) {
+      state.month = month
+    }
+  }
+}
+

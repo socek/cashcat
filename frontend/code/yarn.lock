@@ -6232,6 +6232,10 @@ vue-loader@^12.1.0:
     vue-style-loader "^3.0.0"
     vue-template-es2015-compiler "^1.2.2"
 
+vue-monthly-picker@^0.2.5:
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/vue-monthly-picker/-/vue-monthly-picker-0.2.5.tgz#feffd313a1c8ad9152aee788e09b1be83d695799"
+
 vue-resource@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/vue-resource/-/vue-resource-1.5.0.tgz#ba0c6ef7af2eeace03cf24a91f529471be974c72"

@@ -20,7 +20,7 @@ export default {
   actions: {
     fetchGroups: (state) => {
       let resource = groupResource(state.rootState.vue)
-      resource.list({}).then((response) => {
+      resource.list({month: state.rootState.month.month.format('YYYY-MM')}).then((response) => {
         state.commit('setGroups', response.data)
       })
     }

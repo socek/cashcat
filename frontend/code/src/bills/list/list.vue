@@ -37,7 +37,11 @@ export default {
   },
   methods: {
     provider (ctx) {
-      return this.resource.list({wallet_uid: this.$route.params.wallet_uid}, this.fields).then((response) => {
+      let data = {
+        wallet_uid: this.$route.params.wallet_uid,
+        month: this.$store.state.month.month.format('YYYY-MM')
+      }
+      return this.resource.list(data, this.fields).then((response) => {
         return response.data
       })
     },
