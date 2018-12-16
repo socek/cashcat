@@ -10,6 +10,7 @@
     <template slot="anhor">
       <icon name="plus-circle" />
     </template>
+
     <template slot="content">
       <text-input v-model="form.place" label="Miejsce" placeholder="nazwa sklepu"></text-input>
       <date-input v-model="form.billed_at" label="Kiedy"></date-input>

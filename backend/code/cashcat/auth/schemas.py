@@ -11,6 +11,7 @@ class LoginSchema(Schema):
 
 
 class SignUpSchema(Schema):
+    name = String(required=False, allow_none=False)
     email = Email(required=True, allow_none=False)
     password = String(required=True, allow_none=False)
     confirmPassword = String(required=True, allow_none=False)

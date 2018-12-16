@@ -1,113 +1,52 @@
 <template>
-  <div class="row justify-content-md-end signup">
-    <b-btn id="sign-up-button" @click="showModal" v-if="!isAuthenticated" variant="danger" size="small">
-      Sign Up
-    </b-btn>
+  <dialogform
+    title="Zarejestruj się"
 
-    <b-modal id="signUpModal" ref="signUpModal" title="Sign Up" hide-footer>
-      <form @submit.prevent="onSubmit">
-        <b-form-invalid-feedback  :force-show="true"
-                                  v-for="error in errors._schema"
-                                  :key="error">
-          {{ error }}
-        </b-form-invalid-feedback>
+    v-if="!isAuthenticated"
+    variant="danger"
+    ref="dialog"
+    v-model="form"
+    @submit="onSubmit">
 
-        <b-form-group id="registrationEmailFieldGroup"
-                      label="Email:"
-                      label-for="registrationEmailField">
-          <b-form-input id="registrationEmailField"
-                        type="text"
-                        placeholder="email"
-                        v-model.trim="fields.email"
-                        :state="errors.email.length == 0 ? null : false">
-          </b-form-input>
-          <b-form-invalid-feedback v-for="error in errors.email" :key="error">
-            {{ error }}
-          </b-form-invalid-feedback>
-        </b-form-group>
+    <template slot="anhor">
+      Zarejestruj
+    </template>
 
-        <b-form-group id="registrationPasswordFieldGroup"
-                      label="Password:"
-                      label-for="registrationPasswordField">
-          <b-form-input id="registrationPasswordField"
-                        type="password"
-                        placeholder="password"
-                        :state="errors.password.length == 0 ? null : false"
-                        v-model.trim="fields.password">
-          </b-form-input>
-          <b-form-invalid-feedback  v-for="error in errors.password"
-                                    :key="error">
-            {{ error }}
-          </b-form-invalid-feedback>
-        </b-form-group>
-        <b-form-group id="registrationConfirmPasswordFieldGroup"
-                      label="Confirm Password:"
-                      label-for="registrationConfirmPasswordField">
-          <b-form-input id="registrationConfirmPasswordField"
-                        type="password"
-                        placeholder="password"
-                        :state="errors.confirmPassword.length == 0 ? null : false"
-                        v-model.trim="fields.confirmPassword">
-          </b-form-input>
-          <b-form-invalid-feedback  v-for="error in errors.confirmPassword"
-                                    :key="error">
-            {{ error }}
-          </b-form-invalid-feedback>
-        </b-form-group>
-        <input type="submit" value="Sign Up" class="btn btn-primary">
-        <b-btn variant="danger" @click="hideModal">Cancel</b-btn>
-      </form>
-    </b-modal>
-  </div>
+    <template slot="content">
+      <text-input v-model="form.name" label="Imię" placeholder="Nick"></text-input>
+      <text-input v-model="form.email" label="Email" placeholder="sample@email.com"></text-input>
+      <password-input v-model="form.password" label="Hasło"></password-input>
+      <password-input v-model="form.confirmPassword" label="Powtórz hasło"></password-input>
+
+    </template>
+  </dialogform>
 </template>
 
 <script>
 import authResource from '@/auth/resource'
+import form from '@/forms'
 
 export default {
   data () {
     return {
-      fields: {
+      form: form({
+        name: '',
         email: '',
         password: '',
         confirmPassword: ''
-      },
-      errors: {
-        _schema: [],
-        email: [],
-        password: [],
-        confirmPassword: []
-      },
+      }),
       resource: authResource(this)
     }
   },
   methods: {
-    refresh () {
-      for (let name in this.fields) {
-        this.fields[name] = ''
-        this.errors[name] = ''
-      }
-      this.errors._schema = ''
-    },
-    showModal () {
-      this.refresh()
-      this.$refs.signUpModal.show()
-    },
-    hideModal () {
-      this.$refs.signUpModal.hide()
-    },
-    onSubmit () {
-      this.resource.signUp({}, this.fields).then((response) => {
-        this.$store.commit('auth/logIn', response.body.jwt)
-        this.$router.push({name: 'Contests'})
-      }).catch((response) => {
-        for (let item in this.errors) {
-          this.errors[item] = []
+    onSubmit (form) {
+      form.submit(
+        () => this.resource.signUp({}, form.toData()),
+        (response) => {
+          this.$store.commit('auth/logIn', response.body.jwt)
+          this.$router.push({name: 'WalletList'})
         }
-        for (let item in response.body) {
-          this.errors[item] = response.body[item]
-        }
-      })
+      )
     }
   },
   computed: {

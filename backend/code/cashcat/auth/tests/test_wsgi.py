@@ -1,5 +1,4 @@
 from unittest.mock import patch
-from uuid import uuid4
 
 from pytest import fixture
 
@@ -57,16 +56,13 @@ class TestWebSignUpFormView(WebTestFixture):
         /auth/signup should create a proper formed user
         """
         new_user = {
+            "name": "some name",
             "email": "new@email.com",
             "password": "fake1",
             "confirmPassword": "fake1",
         }
-        mcommand.return_value.uid = 10
-        muser = mcommand.create.return_value
-        muser.uid = uuid4()
 
         result = fake_app.post_json(self.url, params=new_user)
+        user = mcommand.create.call_args_list[0][0][0]
 
-        mcommand.create.assert_called_once_with(email="new@email.com", password="fake1")
-
-        assert result.json_body == {"jwt": encode_jwt_from_user(muser)}
+        assert result.json_body == {"jwt": encode_jwt_from_user(user)}
