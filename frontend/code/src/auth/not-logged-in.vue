@@ -26,10 +26,13 @@ export default {
   },
   methods: {
     onSubmit (form) {
-      this.resource.login({}, form).then((response) => {
-        this.$store.commit('auth/logIn', response.body.jwt)
-        this.$router.push({name: 'WalletList'})
-      }).catch(this.$refs.form.parseErrorResponse)
+      form.submit(
+        () => this.resource.login({}, form.toData()),
+        (response) => {
+          this.$store.commit('auth/logIn', response.body.jwt)
+          this.$router.push({name: 'WalletList'})
+        }
+      )
     }
   }
 }
