@@ -28,13 +28,13 @@ class GroupSchema(ModelSchema):
 
 class GroupAggregationSchema(ModelSchema):
     name = String(required=True, validate=not_blank)
-    total = Decimal(
-        as_string=True,
-        required=True,
-        places=2,
-    )
-    items = Decimal(
-        as_string=True,
-        required=True,
-        places=2,
-    )
+    total = Decimal(as_string=True, places=2)
+    items = Decimal(as_string=True, places=2)
+
+    @pre_dump
+    def make_dict(self, obj):
+        return dict(
+            uid=obj.uid,
+            name=obj.name,
+            total=obj.total or 0,
+            items=obj.items or 0)

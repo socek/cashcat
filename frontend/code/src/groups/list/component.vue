@@ -29,6 +29,8 @@ export default {
       isBusy: false,
       fields: [
         {key: 'name', label: 'Nazwa'},
+        {key: 'total', label: 'Bilans'},
+        {key: 'items', label: 'Produktów'},
         {key: 'actions', label: 'Akcje'} ],
       resource: groupResource(this)
     }

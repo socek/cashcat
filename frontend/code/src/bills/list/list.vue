@@ -47,6 +47,7 @@ export default {
     },
     fetchData () {
       this.$refs.table.refresh()
+      this.$store.dispatch('groups/fetchGroups')
     }
   },
   components: {
