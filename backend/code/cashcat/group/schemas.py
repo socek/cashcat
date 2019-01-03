@@ -1,5 +1,6 @@
 from marshmallow import post_load
 from marshmallow import pre_dump
+from marshmallow.fields import Decimal
 from marshmallow.fields import String
 from marshmallow.fields import UUID
 
@@ -23,3 +24,17 @@ class GroupSchema(ModelSchema):
             name=data.get("name"),
             wallet_uid=data.get("wallet_uid"),
         )
+
+
+class GroupAggregationSchema(ModelSchema):
+    name = String(required=True, validate=not_blank)
+    total = Decimal(
+        as_string=True,
+        required=True,
+        places=2,
+    )
+    items = Decimal(
+        as_string=True,
+        required=True,
+        places=2,
+    )

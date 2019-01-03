@@ -1,8 +1,10 @@
 from sqlalchemy import DateTime
 from sqlalchemy.exc import DataError
 from sqlalchemy.orm.exc import NoResultFound as SANoResultFound
+from sqlalchemy.sql import and_
 from sqlalchemy.sql import cast
 from sqlalchemy.sql import func
+from sqlalchemy.sql import or_
 
 from cashcat.application.drivers import Query
 from cashcat.application.drivers.query import NoResultFound
@@ -38,21 +40,30 @@ class GroupQuery(Query):
             yield obj.to_model()
 
     def summary_for_period(self, wallet_uid, start, end):
+        """
+        Get summary aggregation of groups from a provided period.
+        """
         return (
             self.database.query(
+                self.model.uid,
                 self.model.name,
                 func.sum(BillItemData.total).label('total'),
                 func.count(BillItemData.uid).label('items'),
             )
-            .join(BillItemData)
-            .join(BillData)
-            .join(WalletData)
-            .filter(BillData.wallet_uid == wallet_uid)
-            .filter(cast(BillData.billed_at, DateTime) >= start)
-            .filter(cast(BillData.billed_at, DateTime) <= end)
+            .join(BillItemData, full=True)
+            .join(BillData, full=True)
+            .filter(
+                or_(
+                    BillData.billed_at.is_(None),
+                    and_(
+                        cast(BillData.billed_at, DateTime) >= start,
+                        cast(BillData.billed_at, DateTime) <= end
+                    )
+                )
+            )
             .filter(self.model.is_active.is_(True))
-            .filter(BillItemData.is_active.is_(True))
-            .filter(BillData.is_active.is_(True))
+            .filter(BillItemData.is_active.isnot(False))
+            .filter(BillData.is_active.isnot(False))
             .filter(WalletData.is_active.is_(True))
             .group_by(self.model.uid)
         ).all()
