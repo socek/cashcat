@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.7'
 
 services:
   nginx:
@@ -17,17 +17,17 @@ services:
       - ./backend/code:/code
 
   frontend:
-    build: frontend
+    build:
+      context: frontend
+      target: builder
     env_file: .env
     volumes:
       - ./frontend/code:/code
-    command: npm run dev
+      - /code/node_modules
 
   postgres:
     image: postgres:10.1
     env_file: .env
-    labels:
-      - "traefik.enable=false"
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
